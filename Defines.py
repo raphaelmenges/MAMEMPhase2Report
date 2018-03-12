@@ -4,6 +4,7 @@ import datetime
 ### Parameters ###
 
 output_dir = './output/'
+plot_format = ".pdf"
 
 ### User Filter ###
 
@@ -14,7 +15,7 @@ user_filter = [
 		User('sheba2', 	datetime.datetime(2018, 2, 1,  0,  1,  0)),
 		User('sheba3', 	datetime.datetime(2018, 2, 1,  0,  1,  0)),
 		User('sheba4', 	datetime.datetime(2018, 2, 1,  0,  1,  0)),
-		User('sheba5', 	datetime.datetime(2018, 2, 1,  0,  1,  0)),
+		User('sheba5', 	datetime.datetime(2018, 3, 1,  0,  1,  0)),
 		User('mda1', 		datetime.datetime(2018, 3, 6,  11, 0,  0)),
 		User('mda2', 		datetime.datetime(2018, 3, 7,  10, 0,  0)),
 		User('mda3', 		datetime.datetime(2018, 3, 8,  11, 0,  0)),

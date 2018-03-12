@@ -11,29 +11,51 @@ class UserData():
 
 	# Initialization
 	def __init__(self, data, setup_date):
+		
+		# Private members
 		self._data = data # dict pointer
 		self._setup_date = setup_date
 		
+		# Fill metrics
+		self.nickname = self._get_data(Keys.nickname)
+		self._calc_start_metrics()
+		
 	# Selfreport
 	def self_report(self):
-		rp.print_line("Nickname: ", self._get_data(Keys.nickname))
+		
+		# Do written report
+		rp.print_line("Nickname: ", self.nickname)
 		rp.print_line("Setup Date: ", self._setup_date)
-		rp.print_line("Start Count: ", self._count_starts())
-		# rp.print_line("Latest Start: ", hlp.to_date(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date')))
+		rp.print_line("Start Count: ", self.start_count)
+		rp.print_line("Latest Start: ", hlp.to_date_DMYHMS(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date')))
 		rp.print_line("Total Active Hours (in Web): ", self._total_active_hours())
 	
 	### Calculations ###
 	
-	# Count starts
-	def _count_starts(self):
-		start_count = 0
+	# Go over starts
+	def _calc_start_metrics(self):
+		
+		# Dictionary to return metrics
+		self.start_count = 0
+		self.daily_use = {} # day:count; day encoded as d-m-Y string
+		
+		# Go over start structs
 		for key, start in self._data['general']['start'].items():
 			if key != 'count': # there is alway one count entry that we ignore
-				if self._after_setup(start['date']): # only count starts after setup
-					start_count += 1
-		return start_count
-	
-	# Total time in front of eye tracker
+				if self._after_setup(start['date']): # barrier to include only after-setup data
+					
+					# Update count
+					self.start_count += 1
+					
+					# Update daily use
+					date = hlp.to_date_DMYHMS(start['date'])
+					day = str(date.day) + '-' + str(date.month) + '-' + str(date.year)
+					if day in self.daily_use:
+						self.daily_use[day] += 1
+					else:
+						self.daily_use[day] = 1
+					
+	# Total time in front of eye tracker TODO: make this method more abstract, like above
 	def _total_active_hours(self):
 		total_active_hours = 0.0
 		if 'pageActivity' in self._data:
@@ -50,7 +72,7 @@ class UserData():
 	
 	# Check whether date was after setup
 	def _after_setup(self, date_string):
-		return hlp.to_date(date_string) >= self._setup_date
+		return hlp.to_date_DMYHMS(date_string) >= self._setup_date
 	
 	# Get data by key path into nested dict structure. Accepts additional custom keys
 	def _get_data(self, key_path, *args):
