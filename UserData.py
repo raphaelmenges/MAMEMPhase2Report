@@ -16,7 +16,7 @@ class UserData():
 	# Selfreport
 	def self_report(self):
 		rp.print_line("Nickname: ", self._get_data(Keys.nickname))
-		rp.print_line("Starts: ", str(self._get_data(Keys.start_count)))
+		rp.print_line("Starts: ", str(self._get_data(Keys.start_count))) # TODO: this number should not be used. If starts are filtered because happened before / during setup, number is too high
 		rp.print_line("Latest Start: ", str(hlp.to_date(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date'))))
 		rp.print_line("Total Active Hours: ", str(self._total_active_hours()))
 		
