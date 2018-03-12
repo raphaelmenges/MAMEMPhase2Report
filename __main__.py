@@ -4,7 +4,6 @@ import Defines as dfn
 import json
 
 # TODO
-# Ignore datapoints before setup time
 # Tell in header about creation of report / last datapoint / count of users etc.
 
 ### Global Variables ###
@@ -22,9 +21,10 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	for uid, user in data['users'].items():
 		
 		# Check whether user is participant
-		name = user['userDetails']['nickname']
-		if any(name in x.nickname for x in dfn.user_filter): # go over users and check existence
-			user_data_list.append(ud.UserData(user))
+		nickname = user['userDetails']['nickname']
+		for x in dfn.user_filter: # go over participants
+			if nickname == x.nickname: # nickname matches
+				user_data_list.append(ud.UserData(user, x.setup_date))
 			
 	# Sort user data list
 	user_data_list.sort();

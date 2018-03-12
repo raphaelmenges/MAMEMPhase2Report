@@ -11,5 +11,5 @@ def init_file():
 def print_line(*args):
 	with open(dfn.output_dir + 'report.txt', 'a') as f:
 		for arg in args:
-			f.write(arg)
+			f.write(str(arg))
 		f.write('\n')
