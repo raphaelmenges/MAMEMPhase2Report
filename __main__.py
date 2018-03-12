@@ -23,7 +23,7 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 		
 		# Check whether user is participant
 		name = user['userDetails']['nickname']
-		if any(name in x for x in dfn.user_filter): # go over users and check existence
+		if any(name in x.nickname for x in dfn.user_filter): # go over users and check existence
 			user_data_list.append(ud.UserData(user))
 			
 	# Sort user data list
