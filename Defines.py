@@ -10,7 +10,7 @@ output_dir = './output/'
 # Tuple of nickname and date of setup
 User = collections.namedtuple('User', 'nickname date')
 user_filter = [
-		User('sheba1', 	datetime.datetime(2018, 3, 1,  10, 1,  0)),
+		User('sheba1', 	datetime.datetime(2018, 3, 1,  0,  1,  0)),
 		User('sheba2', 	datetime.datetime(2018, 3, 1,  0,  1,  0)),
 		User('sheba3', 	datetime.datetime(2018, 3, 1,  0,  1,  0)),
 		User('sheba4', 	datetime.datetime(2018, 3, 1,  0,  1,  0)),
