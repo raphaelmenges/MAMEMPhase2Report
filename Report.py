@@ -1,5 +1,3 @@
-### Report Singleton ###
-
 import Defines as dfn
 
 def init_file():

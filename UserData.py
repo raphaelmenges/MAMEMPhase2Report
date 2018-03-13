@@ -1,9 +1,6 @@
-### User Data Class ###
-
 import Keys
 import Helpers as hlp
 import Report as rp
-
 from functools import reduce
 from operator import getitem
 

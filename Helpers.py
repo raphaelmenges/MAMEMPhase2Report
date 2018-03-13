@@ -1,5 +1,3 @@
-### Helpers ###
-
 import datetime
 
 def from_date_string_to_date(date_string):
