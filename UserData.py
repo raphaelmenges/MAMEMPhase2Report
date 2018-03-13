@@ -6,7 +6,6 @@ import Report as rp
 
 from functools import reduce
 from operator import getitem
-import collections
 
 class UserData():
 
@@ -29,7 +28,7 @@ class UserData():
 	def self_report(self):
 		
 		# Some on-the-fly computations
-		latest_start = hlp.to_date_DMYHMS(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date'))
+		latest_start = hlp.from_date_string_to_date(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date'))
 		
 		# Do written report
 		rp.print_line("Nickname: ", self.nickname)
@@ -52,18 +51,19 @@ class UserData():
 		# Go over start structs
 		for key, start in self._data['general']['start'].items():
 			if key != 'count': # there is alway one count entry that we ignore
-				if self._after_setup(start['date']): # barrier to include only after-setup data
+				
+				# Barrier to ignore before-setup data
+				if self._after_setup(start['date']):
 					
 					# Update count
 					self.start_count += 1
 					
 					# Update daily use
-					date = hlp.to_date_DMYHMS(start['date'])
-					day = str(date.day) + '-' + str(date.month) + '-' + str(date.year)
-					if day in self.daily_use:
-						self.daily_use[day]['start_count'] += 1
+					day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(start['date']))
+					if day_string in self.daily_use:
+						self.daily_use[day_string]['start_count'] += 1
 					else:
-						self.daily_use[day] = {'start_count': 1, 'active_hours': 0.0 }
+						self.daily_use[day_string] = {'start_count': 1, 'active_hours': 0.0 }
 					
 	# Total time in front of eye tracker TODO: make this method more abstract, like above
 	def _calc_page_acitivity_metrics(self):
@@ -82,14 +82,22 @@ class UserData():
 					# Barrier to ignore before-setup data
 					if self._after_setup(session['startDate']):
 						
+						# Some pre-computations
+						active_hours = session['durationUserActive'] / (60.0 * 60.0)
+						
 						# Update total active hours
-						self.total_active_hours += session['durationUserActive'] / (60.0 * 60.0) # from seconds to hours
+						self.total_active_hours +=  active_hours # from seconds to hours
+						
+						# Update daily use
+						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
+						if day_string in self.daily_use:
+							self.daily_use[day_string]['active_hours'] += active_hours
 	
 	####################
 	
 	# Check whether date was after setup
 	def _after_setup(self, date_string):
-		return hlp.to_date_DMYHMS(date_string) >= self._setup_date
+		return hlp.from_date_string_to_date(date_string) >= self._setup_date
 	
 	# Get data by key path into nested dict structure. Accepts additional custom keys
 	def _get_data(self, key_path, *args):
