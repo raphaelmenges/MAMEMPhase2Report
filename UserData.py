@@ -35,9 +35,9 @@ class UserData():
 	# Go over starts
 	def _calc_start_metrics(self):
 		
-		# Dictionary to return metrics
+		# Metrics
 		self.start_count = 0
-		self.daily_use = {} # day:count; day encoded as d-m-Y string
+		self.daily_use_starts = {} # day:count; day encoded as d-m-Y string
 		
 		# Go over start structs
 		for key, start in self._data['general']['start'].items():
@@ -50,10 +50,10 @@ class UserData():
 					# Update daily use
 					date = hlp.to_date_DMYHMS(start['date'])
 					day = str(date.day) + '-' + str(date.month) + '-' + str(date.year)
-					if day in self.daily_use:
-						self.daily_use[day] += 1
+					if day in self.daily_use_starts:
+						self.daily_use_starts[day] += 1
 					else:
-						self.daily_use[day] = 1
+						self.daily_use_starts[day] = 1
 					
 	# Total time in front of eye tracker TODO: make this method more abstract, like above
 	def _total_active_hours(self):
