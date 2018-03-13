@@ -85,5 +85,6 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	plt.grid(True)
 	
 	# Plot it
+	plt.title('Daily Usage - Start Count')
 	plt.scatter(plot_data_x,plot_data_y,s=175, color='lightgreen')
 	fig.savefig(dfn.output_dir + 'daily_usage' + dfn.plot_format, bbox_inches='tight')

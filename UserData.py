@@ -16,28 +16,36 @@ class UserData():
 		self._data = data # dict pointer
 		self._setup_date = setup_date
 		
-		# Fill metrics
+		### Metrics #############################################################
 		self.nickname = self._get_data(Keys.nickname)
+		#########################################################################
+		
+		# Calculate further metrics
 		self._calc_start_metrics()
+		self._calc_page_acitivity_metrics()
 		
 	# Selfreport
 	def self_report(self):
+		
+		# Some on-the-fly computations
+		latest_start = hlp.to_date_DMYHMS(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date'))
 		
 		# Do written report
 		rp.print_line("Nickname: ", self.nickname)
 		rp.print_line("Setup Date: ", self._setup_date)
 		rp.print_line("Start Count: ", self.start_count)
-		rp.print_line("Latest Start: ", hlp.to_date_DMYHMS(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date')))
-		rp.print_line("Total Active Hours (in Web): ", self._total_active_hours())
+		rp.print_line("Latest Start: ", latest_start)
+		rp.print_line("Total Active Hours (in Web): ", self.total_active_hours)
 	
 	### Calculations ###
 	
 	# Go over starts
 	def _calc_start_metrics(self):
 		
-		# Metrics
+		### Metrics #############################################################
 		self.start_count = 0
 		self.daily_use_starts = {} # day:count; day encoded as d-m-Y string
+		#########################################################################
 		
 		# Go over start structs
 		for key, start in self._data['general']['start'].items():
@@ -56,17 +64,24 @@ class UserData():
 						self.daily_use_starts[day] = 1
 					
 	# Total time in front of eye tracker TODO: make this method more abstract, like above
-	def _total_active_hours(self):
-		total_active_hours = 0.0
+	def _calc_page_acitivity_metrics(self):
+		
+		### Metrics #############################################################
+		self.total_active_hours = 0.0
+		#########################################################################
+		
+		# Go over page activity entries 
 		if 'pageActivity' in self._data:
 			for page, activity in self._data['pageActivity'].items():
+				
+				# Go over session per activitiy (email, shopping, etc.)
 				for session in activity['sessions']:
 					
 					# Barrier to ignore before-setup data
 					if self._after_setup(session['startDate']):
-						total_active_hours += session['durationUserActive'] / (60.0 * 60.0) # from seconds to hours
-					
-		return total_active_hours
+						
+						# Update total active hours
+						self.total_active_hours += session['durationUserActive'] / (60.0 * 60.0) # from seconds to hours
 	
 	####################
 	
