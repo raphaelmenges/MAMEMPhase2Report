@@ -49,6 +49,6 @@ def daily_use(user_data_list):
 	plt.grid(True)
 	
 	# Plot it
-	plt.title('Daily Usage - Start Count (bold) and Active Hours')
+	plt.title('Daily Usage - Start Count (bold) and Active Hours (in Web)')
 	plt.scatter(plot_data_x,plot_data_y,s=175, color='lightgreen')
 	fig.savefig(dfn.output_dir + 'daily_usage' + dfn.plot_format, bbox_inches='tight')
