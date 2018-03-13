@@ -6,6 +6,7 @@ import Report as rp
 
 from functools import reduce
 from operator import getitem
+import collections
 
 class UserData():
 
@@ -44,7 +45,8 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.start_count = 0
-		self.daily_use_starts = {} # day:count; day encoded as d-m-Y string
+		self.daily_use = {} # day: {start_count, active_hours};
+		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
 		#########################################################################
 		
 		# Go over start structs
@@ -58,10 +60,10 @@ class UserData():
 					# Update daily use
 					date = hlp.to_date_DMYHMS(start['date'])
 					day = str(date.day) + '-' + str(date.month) + '-' + str(date.year)
-					if day in self.daily_use_starts:
-						self.daily_use_starts[day] += 1
+					if day in self.daily_use:
+						self.daily_use[day]['start_count'] += 1
 					else:
-						self.daily_use_starts[day] = 1
+						self.daily_use[day] = {'start_count': 1, 'active_hours': 0.0 }
 					
 	# Total time in front of eye tracker TODO: make this method more abstract, like above
 	def _calc_page_acitivity_metrics(self):

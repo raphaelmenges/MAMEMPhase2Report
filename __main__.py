@@ -49,7 +49,7 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	# Get days of the experiment as range
 	daily_use_dates = []
 	for user_data in user_data_list:
-		for day in user_data.daily_use_starts.keys():
+		for day in user_data.daily_use.keys():
 			daily_use_dates.append(hlp.to_date_DMY(day)) # convert date string back to datetime
 	daily_use_dates = list(set(daily_use_dates)) # make datetimes unique
 	daily_use_dates.sort() # sort datetimes
@@ -71,12 +71,12 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	plot_data_x = []
 	plot_data_y = []
 	for idx, user in enumerate(user_data_list): # go over users
-		for day, count in user.daily_use_starts.items(): # go over daily use of user
+		for day, use in user.daily_use.items(): # go over daily use of user
 			x = (hlp.to_date_DMY(day) - min_date).days # dates since start of experiment used as index in x-axis
 			y = idx # just the user index
 			plot_data_x.append(x)
 			plot_data_y.append(y)
-			ax.annotate(str(count), (x,y),
+			ax.annotate(str(use['start_count']), (x,y),
 			   ha="center", va="center")
 	
 	# Grid
