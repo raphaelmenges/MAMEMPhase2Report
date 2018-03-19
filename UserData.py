@@ -69,15 +69,15 @@ class UserData():
 		self.total_active_hours = 0.0
 		#########################################################################
 		
-		# Go over page activity entries 
+		# Go over page activity items 
 		if 'pageActivity' in self._data:
-			for page, activity in self._data['pageActivity'].items():
+			for activity, sessions in self._data['pageActivity'].items():
 				
-				# Go over session per activitiy (email, shopping, etc.)
-				for session in activity['sessions']:
+				# Go into sessions
+				for session in sessions['sessions']:
 					
-					# Barrier to ignore before-setup data
-					if self._after_setup(session['startDate']):
+					# Barrier to ignore empty data point and before-setup data
+					if (session is not None) and (self._after_setup(session['startDate'])):
 						
 						# Some pre-computations
 						active_hours = session['durationUserActive'] / (60.0 * 60.0)
