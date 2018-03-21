@@ -18,8 +18,7 @@ def daily_use(user_data_list):
 	# x-axis, displaying the date range
 	fig = plt.figure()
 	ax = plt.gca()
-	plt.xticks(range(len(date_range)), date_range)
-	plt.xticks(rotation=90)
+	plt.xticks(range(len(date_range)), [str(x.day) + '/' + str(x.month) for x in date_range], rotation=45)
 	
 	# y-axis, displaying the participants
 	y = range(len(user_data_list))
@@ -30,8 +29,12 @@ def daily_use(user_data_list):
 	plot_data_y = []
 	for idx, user in enumerate(user_data_list): # go over users
 		for day_string, use in user.daily_use.items(): # go over daily use of user
+			
+			# Gather coordinate
 			x = (hlp.from_day_string_to_date(day_string) - min_date).days # dates since start of experiment used as index in x-axis
 			y = idx # just the user index
+			
+			# Render big dot
 			plot_data_x.append(x)
 			plot_data_y.append(y)
 			
