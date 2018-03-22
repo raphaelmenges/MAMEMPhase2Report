@@ -22,9 +22,15 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 				print('.', end='')
 				user_data_list.append(ud.UserData(user, x.setup_date))
 	print('finished.')
-			
-	# Sort user data list
-	user_data_list.sort();
+	
+	# Sort user data list same as filter list
+	sorted_user_data_list = []
+	for user in dfn.user_filter:
+		for user_data in user_data_list:
+			if user_data.nickname == user.nickname:
+				sorted_user_data_list.append(user_data)
+				break
+	user_data_list = sorted_user_data_list
 	
 	# Initialize report
 	rp.init_file()

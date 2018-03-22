@@ -164,7 +164,3 @@ class UserData():
 		for arg in args: # append custom keys
 			copy_path.append(str(arg))
 		return reduce(getitem, copy_path, self._data)
-	
-	# Comparator for sorting
-	def __lt__(self, other):
-		return self._get_data(Keys.nickname) < other._get_data(Keys.nickname)
