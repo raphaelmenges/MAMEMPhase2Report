@@ -16,18 +16,43 @@ def general_metrics_counts(user_data_list):
 	
 	# Collect data
 	nicknames = []
-	counts = []
+	counts = {
+			'bookmarkAdding': ['bookmark_adding_count', 'Bookmark Adding Count', []],
+			'bookmarkUsage': ['bookmark_usage_count', 'Bookmark Usage Count', []],
+			'goBackUsage': ['go_back_usage_count', 'Go Back Usage Count', []],
+			'goForwardUsage': ['go_forward_usage_count', 'Go Forward Usage Count', []],
+			'historyUsage': ['history_usage_count', 'Histroy Usage Count', []],
+			'pause': ['pause_count', 'Pause Count', []],
+			'tabClosing': ['tab_closing_count', 'Tab Closing Count', []],
+			'tabCreation': ['tab_creation_count', 'Tab Creation Count', []],
+			'tabReloading': ['tab_reloading_count', 'Tab Reloading Count', []],
+			'tabSwitching': ['tab_switching_count', 'Tab Switching Count', []],
+			'unpause': ['unpause_count', 'Unpause Count', []],
+			'urlInput': ['url_input_count', 'URL Input Count', []]}
 	for user_data in user_data_list:
 		nicknames.append(user_data.nickname)
-		counts.append(user_data.bookmark_adding_count)
+		counts['bookmarkAdding'][2].append(user_data.bookmark_adding_count)
+		counts['bookmarkUsage'][2].append(user_data.bookmark_usage_count)
+		counts['goBackUsage'][2].append(user_data.go_back_usage_count)
+		counts['goForwardUsage'][2].append(user_data.go_forward_usage_count)
+		counts['historyUsage'][2].append(user_data.history_usage_count)
+		counts['pause'][2].append(user_data.pause_count)
+		counts['tabClosing'][2].append(user_data.tab_closing_count)
+		counts['tabCreation'][2].append(user_data.tab_creation_count)
+		counts['tabReloading'][2].append(user_data.tab_reloading_count)
+		counts['tabSwitching'][2].append(user_data.tab_switching_count)
+		counts['unpause'][2].append(user_data.unpause_count)
+		counts['urlInput'][2].append(user_data.url_input_count)
 	
-	fig = plt.figure()
-	plt.title('Global Metrics: Bookmark Adding Count')
-	plt.xticks(range(len(nicknames)), nicknames, rotation=45)
-	plt.bar(range(len(nicknames)), counts, 0.5, color="lightgreen")
-	fig.savefig(dfn.output_dir + 'bookmarks_adding_count' + dfn.plot_format, bbox_inches='tight')
+	# Plot all global metrics
+	for key, item in counts.items():
+		fig = plt.figure()
+		plt.grid(True)
+		plt.xticks(range(len(nicknames)), nicknames, rotation=45)
+		plt.title('Global Metrics: ' + item[1])
+		plt.bar(range(len(nicknames)), item[2], 0.5, color="lightgreen")
+		fig.savefig(dfn.output_dir + item[0] + dfn.plot_format, bbox_inches='tight')
 	
-
 # Daily usage plot
 def daily_use(user_data_list):
 	
