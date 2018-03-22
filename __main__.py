@@ -48,4 +48,6 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	print('Plotting', end='')
 	plt.daily_use(user_data_list)
 	print('.', end='')
+	plt.general_metrics_counts(user_data_list)
+	print('.', end='')
 	print('finished.')

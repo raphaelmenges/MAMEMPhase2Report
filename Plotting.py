@@ -11,6 +11,23 @@ Scatter plot about
 Scatter plot of on time (y axis hous, x days since setup)
 '''
 
+# Plot general metrics counts across users as bar chart
+def general_metrics_counts(user_data_list):
+	
+	# Collect data
+	nicknames = []
+	counts = []
+	for user_data in user_data_list:
+		nicknames.append(user_data.nickname)
+		counts.append(user_data.bookmark_adding_count)
+	
+	fig = plt.figure()
+	plt.title('Global Metrics: Bookmark Adding Count')
+	plt.xticks(range(len(nicknames)), nicknames, rotation=45)
+	plt.bar(range(len(nicknames)), counts, 0.5, color="lightgreen")
+	fig.savefig(dfn.output_dir + 'bookmarks_adding_count' + dfn.plot_format, bbox_inches='tight')
+	
+
 # Daily usage plot
 def daily_use(user_data_list):
 	
