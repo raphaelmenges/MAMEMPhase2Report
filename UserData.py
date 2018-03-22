@@ -18,6 +18,7 @@ class UserData():
 		#########################################################################
 		
 		# Calculate further metrics
+		self._calc_general_metrics()
 		self._calc_start_metrics()
 		self._calc_page_acitivity_metrics()
 		
@@ -33,9 +34,40 @@ class UserData():
 		rp.print_line("Start Count: ", self.start_count)
 		rp.print_line("Latest Start: ", latest_start)
 		rp.print_line("Total Active Hours (in Web): ", self.total_active_hours)
+		rp.print_line("Bookmarks Adding Count: ", self.bookmark_adding)
 	
 	### Calculations ###
 	
+	# Go over general metrics
+	def _calc_general_metrics(self):
+		
+		# List of 'key' and 'value to increment' pairs
+		general_metrics = [['bookmarkAdding', 0]]
+		
+		# Go over general metrics
+		for idx in range(len(general_metrics)):
+			
+			# Check, whether metric key exists in general struct
+			metric_key = general_metrics[idx][0]
+			if metric_key in self._data['general']:
+				
+				# Go over entries in metric struct
+				for key, entry in self._data['general'][metric_key].items():
+					if key != 'count': # there is alway one count entry that we ignore
+						
+						# Barrier to ignore before-setup data
+						if self._after_setup(entry['date']):
+							
+							# Update count
+							general_metrics[idx][1] += 1
+							
+		# Make a dictionary out of the list
+		general_metrics_dict = dict(general_metrics)
+		
+		### Metrics #############################################################
+		self.bookmark_adding = general_metrics_dict['bookmarkAdding']
+		#########################################################################
+						
 	# Go over starts
 	def _calc_start_metrics(self):
 		
