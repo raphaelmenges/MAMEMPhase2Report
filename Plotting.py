@@ -2,6 +2,16 @@ import Helpers as hlp
 import Defines as dfn
 import matplotlib.pyplot as plt
 
+''' IDEAS
+Bar charts about GTW functionality usage per user
+Bar chart of daytime of system start over all users
+Scatter plot of run time
+Scatter plot of active time
+Scatter plot about 
+Scatter plot of on time (y axis hous, x days since setup)
+'''
+
+# Daily usage plot
 def daily_use(user_data_list):
 	
 	# Get days of the experiment as range
