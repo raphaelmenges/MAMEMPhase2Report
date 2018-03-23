@@ -5,8 +5,23 @@ import matplotlib.pyplot as plt
 ''' IDEAS
 YouTube video watching
 Bar chart of daytime of system start over all users
-Scatter plot of on time (y axis hous, x days since setup)
 '''
+
+# Bar chart showing day time of starts
+def start_day_times(user_data_list):
+	
+	# Count starts per day time hour
+	bins = [0] * 24
+	for user in user_data_list:
+		for (hour, minute, second) in user.start_day_times:
+			bins[hour] += 1
+	
+	# Plot it
+	fig = plt.figure()
+	plt.grid(True)
+	plt.title('Day Times of Starts')
+	plt.bar(range(24), bins, 0.5, color="lightgreen")
+	fig.savefig(dfn.output_dir + 'start_day_times' + dfn.plot_format, bbox_inches='tight')
 
 # Scatter plot about run times after each start
 def run_time_after_each_start(user_data_list):

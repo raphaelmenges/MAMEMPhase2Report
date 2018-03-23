@@ -105,6 +105,7 @@ class UserData():
 		self.start_count = 0
 		self.daily_use = {} # day: {start_count, active_hours};
 		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
+		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
 		
 		# Go over start structs
@@ -114,15 +115,21 @@ class UserData():
 				# Barrier to ignore before-setup data
 				if self._after_setup(start['date']):
 					
+					# Helpers
+					date = hlp.from_date_string_to_date(start['date'])
+					
 					# Update count
 					self.start_count += 1
 					
 					# Update daily use
-					day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(start['date']))
+					day_string = hlp.from_date_to_day_string(date)
 					if day_string in self.daily_use:
 						self.daily_use[day_string]['start_count'] += 1
 					else:
 						self.daily_use[day_string] = {'start_count': 1, 'active_hours': 0.0 }
+						
+					# Update start day times
+					self.start_day_times.append((date.hour, date.minute, date.second))
 					
 	# Total time in front of eye tracker TODO: make this method more abstract, like above
 	def _calc_page_acitivity_metrics(self):
