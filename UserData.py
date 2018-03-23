@@ -20,6 +20,7 @@ class UserData():
 		# Calculate further metrics
 		self._calc_general_metrics()
 		self._calc_start_metrics()
+		self._calc_calibration_metrics()
 		self._calc_page_acitivity_metrics()
 		
 	# Selfreport
@@ -70,7 +71,7 @@ class UserData():
 				
 					# Go over entries in metric struct
 					for key, entry in metric_dict.items():
-						if key != 'count': # there is alway one count entry that we ignore
+						if key != 'count': # there is always one count entry that we ignore
 							
 							# Barrier to ignore before-setup data
 							if self._after_setup(entry['date']):
@@ -110,7 +111,7 @@ class UserData():
 		
 		# Go over start structs
 		for key, start in self._data['general']['start'].items():
-			if key != 'count': # there is alway one count entry that we ignore
+			if key != 'count': # there is always one count entry that we ignore
 				
 				# Barrier to ignore before-setup data
 				if self._after_setup(start['date']):
@@ -131,6 +132,31 @@ class UserData():
 					# Update start day times
 					self.start_day_times.append((date.hour, date.minute, date.second))
 					
+	# Calculate metrics about calibrations
+	def _calc_calibration_metrics(self):
+		
+		# Helpers
+		calibration_counts = [0]* self._get_data(Keys.start_count)
+		
+		### Metrics #############################################################
+		self.recalibrations_per_start = [] # triple of start index, re(!)calibration count and whether drift map was used
+		#########################################################################
+		
+		# Go over starts and collect calibrations
+		for key, calibration in self._data['general']['recalibration'].items(): # naming in data structure bad....
+			if key != 'count': # there is always one count entry that we ignore
+				
+				# Barrier to ignore before-setup data
+				if self._after_setup(calibration['date']):
+					
+					# Increase counts of recalibration
+					calibration_counts[calibration['startIndex']] += 1
+					
+		# Filter all entries with zero count (either before setup or people exited the system)
+		for start_index, count in enumerate(calibration_counts):
+			if(count >= 1): # zero means there was no calibration for this start, at all
+				self.recalibrations_per_start.append((start_index, count-1, self._data['general']['start'][str(start_index)]['useDriftMap'])) # re(!)calibrations, subtracting one
+		
 	# Total time in front of eye tracker TODO: make this method more abstract, like above
 	def _calc_page_acitivity_metrics(self):
 		

@@ -1,6 +1,44 @@
 import Helpers as hlp
 import Defines as dfn
 import matplotlib.pyplot as plt
+import numpy as np
+
+# Bar chart showing recalibrations
+def recalibrations(user_data_list):
+	
+	# Collect data
+	nicknames = []
+	recalibration_counts = []
+	recalibration_with_drift_map_counts = [] 
+	for user_data in user_data_list:
+		
+		# Aggregate data per user
+		recalibration_count = 0
+		recalibration_with_drift_map_count = 0
+		for (start_index, count, drift_map) in user_data.recalibrations_per_start:
+			if drift_map:
+				recalibration_with_drift_map_count += count
+			else:
+				recalibration_count += count
+		
+		# Append data
+		nicknames.append(user_data.nickname)
+		recalibration_counts.append(recalibration_count)
+		recalibration_with_drift_map_counts.append(recalibration_with_drift_map_count)
+	
+	# Plot data
+	fig = plt.figure()
+	ax = plt.gca()
+	ax.set_axisbelow(True)
+	plt.grid(True, axis='y')
+	plt.xticks(range(len(nicknames)), nicknames, rotation=45)
+	plt.title('Recalibration Counts')
+	ind = np.arange(len(nicknames))
+	width = 0.4
+	bar_recalibration = plt.bar(ind - (width / 2.0), recalibration_counts, width, color="darkgreen")
+	bar_recalibration_with_drift_map = plt.bar(ind + (width / 2.0), recalibration_with_drift_map_counts, width, color="lightgreen")
+	ax.legend((bar_recalibration[0], bar_recalibration_with_drift_map[0]), ('No Drift Map', 'Drift Map'))
+	fig.savefig(dfn.output_dir + 'recalibration_counts' + dfn.plot_format, bbox_inches='tight')
 
 # Bar chart showing youtube foreground hours
 def youtube_hours(user_data_list):
