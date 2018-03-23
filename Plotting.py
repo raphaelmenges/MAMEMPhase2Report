@@ -149,7 +149,7 @@ def active_hours_after_each_start(user_data_list):
 	plt.grid(True)
 	
 	# Plot it
-	plt.title('Active Hours After Start')
+	plt.title('Active Hours after Start')
 	plt.scatter(plot_data_x,plot_data_y,s=25, color='lightgreen')
 	fig.savefig(dfn.output_dir + 'active_hours_after_each_start' + dfn.plot_format, bbox_inches='tight')
 
