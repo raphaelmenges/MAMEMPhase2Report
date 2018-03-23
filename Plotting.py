@@ -3,13 +3,47 @@ import Defines as dfn
 import matplotlib.pyplot as plt
 
 ''' IDEAS
-Bar charts about GTW functionality usage per user
+YouTube video watching
 Bar chart of daytime of system start over all users
 Scatter plot of run time
 Scatter plot of active time
 Scatter plot about 
 Scatter plot of on time (y axis hous, x days since setup)
 '''
+
+# Scatter plot about run times after each start
+def run_time_after_each_start(user_data_list):
+	
+	# Prepare plotting
+	fig = plt.figure()
+	ax = plt.gca()
+	
+	# y-axis, displaying the users
+	plt.yticks(range(len(user_data_list)), [x.nickname for x in user_data_list])
+	
+	# Data
+	plot_data_x = []
+	plot_data_y = []
+	for idx, user in enumerate(user_data_list): # go over users
+		for hours in user.run_time_hours_per_start: # go over run times
+			
+			# Ignore zero run time
+			if hours <= 0:
+				continue
+			
+			# Attach
+			plot_data_x.append(hours) # run time hours
+			plot_data_y.append(idx) # just the user index
+			
+	# Grid
+	plt.rc('grid', linestyle='dashed', color='grey')
+	ax.set_axisbelow(True)
+	plt.grid(True)
+	
+	# Plot it
+	plt.title('Run Times After Start in Hours')
+	plt.scatter(plot_data_x,plot_data_y,s=25, color='lightgreen')
+	fig.savefig(dfn.output_dir + 'run_times_after_each_start' + dfn.plot_format, bbox_inches='tight')
 
 # Plot general metrics counts across users as bar chart
 def general_metrics_counts(user_data_list):
@@ -52,6 +86,7 @@ def general_metrics_counts(user_data_list):
 		plt.title('Global Metrics: ' + item[1])
 		plt.bar(range(len(nicknames)), item[2], 0.5, color="lightgreen")
 		fig.savefig(dfn.output_dir + item[0] + dfn.plot_format, bbox_inches='tight')
+		print('.', end='')
 	
 # Daily usage plot
 def daily_use(user_data_list):
@@ -72,7 +107,7 @@ def daily_use(user_data_list):
 	ax = plt.gca()
 	plt.xticks(range(len(date_range)), [str(x.day) + '/' + str(x.month) for x in date_range], rotation=45)
 	
-	# y-axis, displaying the participants
+	# y-axis, displaying the users
 	y = range(len(user_data_list))
 	plt.yticks(range(len(user_data_list)), [x.nickname for x in user_data_list])
 	

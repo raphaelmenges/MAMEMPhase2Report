@@ -129,6 +129,7 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.total_active_hours = 0.0
+		self.run_time_hours_per_start = [0.0] * self._get_data(Keys.start_count) # taking here the count of starts in database, including pre-setup. Those will have run-time of zero
 		#########################################################################
 		
 		# Go over page activity items 
@@ -151,6 +152,9 @@ class UserData():
 						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
 						if day_string in self.daily_use:
 							self.daily_use[day_string]['active_hours'] += active_hours
+							
+						# Update run time per start
+						self.run_time_hours_per_start[session['startIndex']] += session['durationInForeground']  / (60.0 * 60.0)
 	
 	####################
 	
