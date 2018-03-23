@@ -6,6 +6,30 @@ import matplotlib.pyplot as plt
 YouTube video watching
 '''
 
+# Bar chart showing youtube foreground hours
+def youtube_hours(user_data_list):
+	
+	# Collect data
+	nicknames = []
+	foreground_hours = []
+	run_time_hours = []
+	for user_data in user_data_list:
+		nicknames.append(user_data.nickname)
+		foreground_hours.append(user_data.youtube_foreground_hours)
+		run_time_hours.append(user_data.youtube_run_time_hours)
+	
+	# Plot data
+	fig = plt.figure()
+	ax = plt.gca()
+	ax.set_axisbelow(True)
+	plt.grid(True, axis='y')
+	plt.xticks(range(len(nicknames)), nicknames, rotation=45)
+	plt.title('YouTube Hours')
+	bar_run_time = plt.bar(range(len(nicknames)), run_time_hours, 0.5, color="darkgreen")
+	bar_foregound = plt.bar(range(len(nicknames)), foreground_hours, 0.5, color="lightgreen")
+	ax.legend((bar_run_time[0], bar_foregound[0]), ('Run Time', 'Foreground'))
+	fig.savefig(dfn.output_dir + 'youtube_hours' + dfn.plot_format, bbox_inches='tight')
+
 # Bar chart showing day time of starts
 def start_day_times(user_data_list):
 	
@@ -17,6 +41,8 @@ def start_day_times(user_data_list):
 	
 	# Plot it
 	fig = plt.figure()
+	ax = plt.gca()
+	ax.set_axisbelow(True)
 	plt.grid(True)
 	plt.title('Day Times of Starts')
 	plt.bar(range(24), bins, 0.5, color="lightgreen")
@@ -126,6 +152,8 @@ def general_metrics_counts(user_data_list):
 	# Plot all global metrics
 	for key, item in counts.items():
 		fig = plt.figure()
+		ax = plt.gca()
+		ax.set_axisbelow(True)
 		plt.grid(True)
 		plt.xticks(range(len(nicknames)), nicknames, rotation=45)
 		plt.title('Global Metrics: ' + item[1])
