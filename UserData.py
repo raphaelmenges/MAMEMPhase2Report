@@ -164,6 +164,7 @@ class UserData():
 		self.total_active_hours = 0.0
 		self.run_time_hours_per_start = [0.0] * self._get_data(Keys.start_count) # taking here the count of starts in database, including pre-setup. Those will have run-time of zero
 		self.active_hours_per_start = [0.0] * self._get_data(Keys.start_count) # similar as for run time
+		self.youtube_active_hours = 0.0
 		self.youtube_foreground_hours = 0.0
 		self.youtube_run_time_hours = 0.0
 		#########################################################################
@@ -196,6 +197,7 @@ class UserData():
 						# Go over pages
 						for page in session['pages']:
 							if 'youtube.com/watch?v=' in page['url']:
+								self.youtube_active_hours += page['durationUserActive'] / (60.0 * 60.0)
 								self.youtube_foreground_hours += page['durationInForeground'] / (60.0 * 60.0)
 								self.youtube_run_time_hours += page['duration'] / (60.0 * 60.0)
 	
