@@ -3,6 +3,45 @@ import Defines as dfn
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Life times of calibrations in hours as scatter plot
+def calibration_life_times(user_data_list):
+	
+	# Prepare plotting
+	fig = plt.figure()
+	ax = plt.gca()
+	
+	# y-axis, displaying the users
+	plt.yticks(range(len(user_data_list)), [x.nickname for x in user_data_list])
+	
+	# Data
+	no_drift_map_x = []
+	no_drift_map_y = []
+	drift_map_x = []
+	drift_map_y = []
+	for idx, user in enumerate(user_data_list): # go over users
+		for calibration in user.calibration_life_times: # go over life times of calibrations
+			
+			# Decide whether drift map was used or not
+			if calibration['drift_map']:
+				drift_map_x.append(calibration['life_time_hours'])
+				drift_map_y.append(idx)
+			else:
+				no_drift_map_x.append(calibration['life_time_hours'])
+				no_drift_map_y.append(idx)
+			
+	# Grid
+	plt.rc('grid', linestyle='dashed', color='grey')
+	ax.set_axisbelow(True)
+	plt.grid(True)
+	
+	# Plot it
+	plt.title('Calibration Life Times in Hours')
+	plt.scatter(no_drift_map_x, no_drift_map_y, s=10, color='darkgreen', marker="x", label='No Drift Map')
+	plt.scatter(drift_map_x, drift_map_y, s=10, color='lightgreen', marker="o", label='Drift Map')
+	plt.legend(loc='upper right');
+	fig.savefig(dfn.output_dir + 'calibration_life_times' + dfn.plot_format, bbox_inches='tight')
+	
+
 # Bar chart showing recalibrations
 def recalibrations(user_data_list):
 	

@@ -52,6 +52,8 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 		
 	### Plotting
 	print('Plotting', end='')
+	plt.calibration_life_times(user_data_list)
+	print('.', end='')
 	plt.recalibrations(user_data_list)
 	print('.', end='')
 	plt.youtube_hours(user_data_list)

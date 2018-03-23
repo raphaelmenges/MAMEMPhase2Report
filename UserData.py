@@ -47,7 +47,7 @@ class UserData():
 	def _calc_required_metrics(self):
 		
 		### Metrics #############################################################
-		self.start_dates = {} # key is start index, value is tuple of start date and end date
+		self.start_dates = {} # key is start index, value is dict of start date and end date
 		#########################################################################
 		
 		# Fill starts
@@ -60,7 +60,7 @@ class UserData():
 				# Store data about start
 				self.start_dates[key] = {'start': date, 'end': date}
 				
-		# Go over page data and search of "oldest" entries for each end
+		# Go over page activity data and search of "oldest" entries for each end
 		if 'pageActivity' in self._data:
 			for activity, sessions in self._data['pageActivity'].items():
 				
@@ -71,14 +71,12 @@ class UserData():
 					if (session is not None):
 					
 						# End date for this session
-						print(session['endDate'])
 						end_date = hlp.from_date_string_to_date(session['endDate'])
 						
 						# Get start index of this session
 						start_index = session['startIndex']
 						
 						# Decide on update of end date
-						print(start_index)
 						if end_date > self.start_dates[str(start_index)]['end']:
 							self.start_dates[str(start_index)]['end'] = end_date
 						
@@ -183,6 +181,7 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.recalibrations_per_start = [] # triple of start index, re(!)calibration count and whether drift map was used
+		self.calibration_life_times = [] # list of dicts holding start index, calibration life time in hours, drift map usage
 		#########################################################################
 		
 		# Go over starts and collect calibrations
@@ -192,8 +191,20 @@ class UserData():
 				# Barrier to ignore before-setup data
 				if self._after_setup(calibration['date']):
 					
+					# Helpers
+					start_index = calibration['startIndex']
+					life_time = (self.start_dates[str(start_index)]['end'] - self.start_dates[str(start_index)]['start'])
+					life_time_days, life_time_seconds = life_time.days, life_time.seconds
+					life_time_hours = life_time_days * 24.0 + life_time_seconds / 3600.0
+					
 					# Increase counts of recalibration
-					calibration_counts[calibration['startIndex']] += 1
+					calibration_counts[start_index] += 1
+					
+					# Set calibration life times list entries
+					self.calibration_life_times.append(
+							{'start_index': start_index,
+							'life_time_hours': life_time_hours,
+							'drift_map': self._data['general']['start'][str(start_index)]['useDriftMap']})
 					
 		# Filter all entries with zero count (either before setup or people exited the system)
 		for start_index, count in enumerate(calibration_counts):
