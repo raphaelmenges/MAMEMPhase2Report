@@ -2,10 +2,6 @@ import Helpers as hlp
 import Defines as dfn
 import matplotlib.pyplot as plt
 
-''' IDEAS
-YouTube video watching
-'''
-
 # Bar chart showing youtube foreground hours
 def youtube_hours(user_data_list):
 	
