@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 ''' IDEAS
 YouTube video watching
-Bar chart of daytime of system start over all users
 '''
 
 # Bar chart showing day time of starts
