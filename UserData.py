@@ -130,6 +130,7 @@ class UserData():
 		### Metrics #############################################################
 		self.total_active_hours = 0.0
 		self.run_time_hours_per_start = [0.0] * self._get_data(Keys.start_count) # taking here the count of starts in database, including pre-setup. Those will have run-time of zero
+		self.active_hours_per_start = [0.0] * self._get_data(Keys.start_count) # similar as for run time
 		#########################################################################
 		
 		# Go over page activity items 
@@ -155,6 +156,7 @@ class UserData():
 							
 						# Update run time per start
 						self.run_time_hours_per_start[session['startIndex']] += session['durationInForeground']  / (60.0 * 60.0)
+						self.active_hours_per_start[session['startIndex']] += session['durationUserActive']  / (60.0 * 60.0)
 	
 	####################
 	

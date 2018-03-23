@@ -54,6 +54,8 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	print('Plotting', end='')
 	plt.run_time_after_each_start(user_data_list)
 	print('.', end='')
+	plt.active_hours_after_each_start(user_data_list)
+	print('.', end='')
 	plt.daily_use(user_data_list)
 	print('.', end='')
 	plt.general_metrics_counts(user_data_list)
