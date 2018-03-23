@@ -40,7 +40,6 @@ def calibration_life_times(user_data_list):
 	plt.scatter(drift_map_x, drift_map_y, s=10, color='lightgreen', marker="o", label='Drift Map')
 	plt.legend(loc='upper right');
 	fig.savefig(dfn.output_dir + 'calibration_life_times' + dfn.plot_format, bbox_inches='tight')
-	
 
 # Bar chart showing recalibrations
 def recalibrations(user_data_list):
