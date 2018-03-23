@@ -1,6 +1,7 @@
 import Keys
 import Helpers as hlp
 import Report as rp
+import datetime
 from functools import reduce
 from operator import getitem
 
@@ -16,6 +17,9 @@ class UserData():
 		### Metrics #############################################################
 		self.nickname = self._get_data(Keys.nickname)
 		#########################################################################
+		
+		# Calculate metrics used for computations of other metrics
+		self._calc_required_metrics()
 		
 		# Calculate further metrics
 		self._calc_general_metrics()
@@ -39,6 +43,45 @@ class UserData():
 	
 	### Calculations ###
 	
+	# Calculate required metrics
+	def _calc_required_metrics(self):
+		
+		### Metrics #############################################################
+		self.start_dates = {} # key is start index, value is tuple of start date and end date
+		#########################################################################
+		
+		# Fill starts
+		for key, start in self._data['general']['start'].items():
+			if key != 'count': # there is always one count entry that we ignore
+				
+				# Helpers
+				date = hlp.from_date_string_to_date(start['date'])
+				
+				# Store data about start
+				self.start_dates[key] = {'start': date, 'end': date}
+				
+		# Go over page data and search of "oldest" entries for each end
+		if 'pageActivity' in self._data:
+			for activity, sessions in self._data['pageActivity'].items():
+				
+				# Go into sessions
+				for session in sessions['sessions']:
+					
+					# Barrier to ignore empty data point
+					if (session is not None):
+					
+						# End date for this session
+						print(session['endDate'])
+						end_date = hlp.from_date_string_to_date(session['endDate'])
+						
+						# Get start index of this session
+						start_index = session['startIndex']
+						
+						# Decide on update of end date
+						print(start_index)
+						if end_date > self.start_dates[str(start_index)]['end']:
+							self.start_dates[str(start_index)]['end'] = end_date
+						
 	# Go over general metrics
 	def _calc_general_metrics(self):
 		
