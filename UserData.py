@@ -220,6 +220,7 @@ class UserData():
 		self.youtube_active_hours = 0.0
 		self.youtube_foreground_hours = 0.0
 		self.youtube_run_time_hours = 0.0
+		self.domain_frequency = {} # dictionary storing domain and visit frequency
 		#########################################################################
 		
 		# Go over page activity items 
@@ -246,6 +247,13 @@ class UserData():
 						# Update run time per start
 						self.run_time_hours_per_start[session['startIndex']] += session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime
 						self.active_hours_per_start[session['startIndex']] += session['durationUserActive'] / (60.0 * 60.0)
+						
+						# Update domain frequency
+						domain = session['domain']
+						if domain in self.domain_frequency:
+							self.domain_frequency[domain] += 1
+						else:
+							self.domain_frequency[domain] = 1
 						
 						# Go over pages
 						for page in session['pages']:

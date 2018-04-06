@@ -4,6 +4,8 @@ import Defines as dfn
 import Plotting as plt
 import json
 import datetime
+import operator
+from collections import Counter
 
 with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	
@@ -42,11 +44,11 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	
 	# Individual information
 	print('Reporting individual users', end='')
-	rp.print_line("### Individual Users") # line to separate users
+	rp.print_line("### Individual Users")
 	rp.print_line("---")
 	for user_data in user_data_list:
 		user_data.self_report()
-		rp.print_line("---")
+		rp.print_line("---") # line to separate users
 		print('.', end='')
 	print('finished.')
 		
@@ -69,3 +71,14 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	plt.general_metrics_counts(user_data_list)
 	print('.', end='')
 	print('finished.')
+	
+	### Most Popular Domains
+	domain_frequency = Counter({})
+	for user_data in user_data_list:
+		domain_frequency = domain_frequency + Counter(user_data.domain_frequency)
+	domain_frequency = sorted(domain_frequency.items(), key=operator.itemgetter(1))
+	domain_frequency.reverse()
+	
+	rp.print_line("### Most Popular Domains")
+	for (domain, frequency) in domain_frequency:
+		rp.print_line(domain + ":\t" + str(frequency))
