@@ -18,18 +18,17 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	for uid, user in data['users'].items():
 		
 		# Check whether user is participant
-		nickname = user['userDetails']['nickname']
-		for x in dfn.user_filter: # go over participants
-			if nickname == x.nickname: # nickname matches
+		for entry in dfn.user_filter: # go over known participants
+			if uid == entry.uid: # uid matches
 				print('.', end='')
-				user_data_list.append(ud.UserData(user, x.setup_date))
+				user_data_list.append(ud.UserData(uid, user, entry.setup_date))
 	print('finished.')
 	
 	# Sort user data list same as filter list
 	sorted_user_data_list = []
-	for user in dfn.user_filter:
+	for entry in dfn.user_filter:
 		for user_data in user_data_list:
-			if user_data.nickname == user.nickname:
+			if user_data.uid == entry.uid:
 				sorted_user_data_list.append(user_data)
 				break
 	user_data_list = sorted_user_data_list
@@ -51,10 +50,6 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 		rp.print_line("---") # line to separate users
 		print('.', end='')
 	print('finished.')
-	
-	plt.daily_use(user_data_list)
-	
-	'''
 		
 	### Plotting
 	print('Plotting', end='')
@@ -86,5 +81,3 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	rp.print_line("### Most Popular Domains")
 	for (domain, frequency) in domain_frequency:
 		rp.print_line(domain + ":\t" + str(frequency))
-		
-	'''

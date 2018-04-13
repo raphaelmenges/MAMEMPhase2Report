@@ -7,9 +7,10 @@ from operator import getitem
 class UserData():
 
 	# Initialization
-	def __init__(self, data, setup_date):
+	def __init__(self, uid, data, setup_date):
 		
 		# Private members
+		self.uid = uid
 		self._data = data # dict pointer
 		self._setup_date = setup_date
 		
