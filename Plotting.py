@@ -251,7 +251,7 @@ def daily_use(user_data_list):
 	date_range = list(hlp.date_range(min_date, max_date, include_end=True))
 	
 	# x-axis, displaying the date range
-	fig = plt.figure()
+	fig = plt.figure(figsize=(12, 5))
 	ax = plt.gca()
 	plt.xticks(range(len(date_range)), [str(x.day) + '/' + str(x.month) for x in date_range], rotation=45)
 	

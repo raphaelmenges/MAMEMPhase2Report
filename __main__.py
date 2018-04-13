@@ -51,6 +51,10 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 		rp.print_line("---") # line to separate users
 		print('.', end='')
 	print('finished.')
+	
+	plt.daily_use(user_data_list)
+	
+	'''
 		
 	### Plotting
 	print('Plotting', end='')
@@ -82,3 +86,5 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	rp.print_line("### Most Popular Domains")
 	for (domain, frequency) in domain_frequency:
 		rp.print_line(domain + ":\t" + str(frequency))
+		
+	'''
