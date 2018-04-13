@@ -20,6 +20,8 @@ user_filter = [
 		User('sheba5', 	datetime.datetime(2018, 3, 6,  18, 0,  0)),
 		User('Timor', 		datetime.datetime(2018, 3, 25, 12, 30, 0)), # sheba6 -> think about mapping from "custom nicknames" to something like "user id". Or change nickname later back to sheba6
 		User('sheba7', 	datetime.datetime(2018, 3, 26, 13, 0,  0)),
+		User('sheba8', 	datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need date
+		User('sheba9', 	datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need date
 		
 		# MDA users
 		User('mda1', 		datetime.datetime(2018, 3, 6,  11, 0,  0)),
