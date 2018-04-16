@@ -218,7 +218,7 @@ class UserData():
 		self.active_hours_per_start = [0.0] * self._get_data(Keys.start_count) # similar as for run time
 		self.youtube_active_hours = 0.0
 		self.youtube_foreground_hours = 0.0
-		self.youtube_run_time_hours = 0.0
+		self.youtube_hours = 0.0
 		self.domain_frequency = {} # dictionary storing domain and visit frequency
 		#########################################################################
 		
@@ -263,7 +263,7 @@ class UserData():
 							if 'youtube.com/watch?v=' in page['url']:
 								self.youtube_active_hours += page['durationUserActive'] / (60.0 * 60.0)
 								self.youtube_foreground_hours += page['durationInForeground'] / (60.0 * 60.0)
-								self.youtube_run_time_hours += page['duration'] / (60.0 * 60.0)
+								self.youtube_hours += page['duration'] / (60.0 * 60.0)
 	
 	####################
 	

@@ -85,12 +85,12 @@ def youtube_hours(user_data_list):
 	ids = []
 	active_hours = []
 	foreground_hours = []
-	run_time_hours = []
+	hours = []
 	for user_data in user_data_list:
 		ids.append(user_data.mid)
 		active_hours.append(user_data.youtube_active_hours)
 		foreground_hours.append(user_data.youtube_foreground_hours)
-		run_time_hours.append(user_data.youtube_run_time_hours)
+		hours.append(user_data.youtube_hours)
 	
 	# Plot data
 	fig = plt.figure()
@@ -99,10 +99,10 @@ def youtube_hours(user_data_list):
 	plt.grid(True, axis='y')
 	plt.xticks(range(len(ids)), ids, rotation=45)
 	plt.title('YouTube Hours')
-	bar_run_time = plt.bar(range(len(ids)), run_time_hours, 0.5, color="black")
+	bar_hours = plt.bar(range(len(ids)), hours, 0.5, color="black")
 	bar_foregound = plt.bar(range(len(ids)), foreground_hours, 0.5, color="darkgreen")
 	bar_active = plt.bar(range(len(ids)), active_hours, 0.5, color="lightgreen")
-	ax.legend((bar_run_time[0], bar_foregound[0], bar_active[0]), ('Run Time', 'Foreground', 'Active'))
+	ax.legend((bar_hours[0], bar_foregound[0], bar_active[0]), ('Total', 'Foreground', 'Active'))
 	fig.savefig(dfn.output_dir + 'youtube_hours' + dfn.plot_format, bbox_inches='tight')
 
 # Bar chart showing day time of starts
