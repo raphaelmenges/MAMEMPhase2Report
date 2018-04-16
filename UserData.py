@@ -213,6 +213,7 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.total_active_hours = 0.0
+		self.total_run_time_hours = 0.0 # total run time in hours without training
 		self.run_time_hours_per_start = [0.0] * self._get_data(Keys.start_count) # taking here the count of starts in database, including pre-setup. Those will have run-time of zero
 		self.active_hours_per_start = [0.0] * self._get_data(Keys.start_count) # similar as for run time
 		self.youtube_active_hours = 0.0
@@ -232,18 +233,22 @@ class UserData():
 					if (session is not None) and (self._after_setup(session['startDate'])):
 						
 						# Some pre-computations
-						active_hours = session['durationUserActive'] / (60.0 * 60.0)
+						active_hours = session['durationUserActive'] / (60.0 * 60.0) # from seconds to hours
 						
 						# Update total active hours
-						self.total_active_hours +=  active_hours # from seconds to hours
+						self.total_active_hours += active_hours 
 						
 						# Update daily use
 						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
 						if day_string in self.daily_use:
 							self.daily_use[day_string]['active_hours'] += active_hours
 							
+						# Update total run time
+						runtime_hours = session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime (without training)
+						self.total_run_time_hours += runtime_hours
+							
 						# Update run time per start
-						self.run_time_hours_per_start[session['startIndex']] += session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime
+						self.run_time_hours_per_start[session['startIndex']] += runtime_hours
 						self.active_hours_per_start[session['startIndex']] += session['durationUserActive'] / (60.0 * 60.0)
 						
 						# Update domain frequency
