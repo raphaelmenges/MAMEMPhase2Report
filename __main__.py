@@ -21,7 +21,7 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 		for entry in dfn.user_filter: # go over known participants
 			if uid == entry.uid: # uid matches
 				print('.', end='')
-				user_data_list.append(ud.UserData(uid, user, entry.setup_date))
+				user_data_list.append(ud.UserData(uid, entry.mid, user, entry.setup_date))
 	print('finished.')
 	
 	# Sort user data list same as filter list

@@ -7,16 +7,13 @@ from operator import getitem
 class UserData():
 
 	# Initialization
-	def __init__(self, uid, data, setup_date):
+	def __init__(self, uid, mid, data, setup_date):
 		
 		# Private members
 		self.uid = uid
+		self.mid = mid
 		self._data = data # dict pointer
 		self._setup_date = setup_date
-		
-		### Metrics #############################################################
-		self.nickname = self._get_data(Keys.nickname)
-		#########################################################################
 		
 		# Calculate metrics used for computations of other metrics
 		self._calc_required_metrics()
@@ -34,7 +31,7 @@ class UserData():
 		latest_start = hlp.from_date_string_to_date(self._get_data(Keys.start_list, self._get_data(Keys.start_count)-1, 'date'))
 		
 		# Do written report
-		rp.print_line("Nickname: ", self.nickname)
+		rp.print_line("MAMEM id: ", self.mid)
 		rp.print_line("Setup Date: ", self._setup_date)
 		rp.print_line("Start Count: ", self.start_count)
 		rp.print_line("Latest Start: ", latest_start)

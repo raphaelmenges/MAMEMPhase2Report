@@ -11,7 +11,7 @@ def calibration_life_times(user_data_list):
 	ax = plt.gca()
 	
 	# y-axis, displaying the users
-	plt.yticks(range(len(user_data_list)), [x.nickname for x in user_data_list])
+	plt.yticks(range(len(user_data_list)), [x.mid for x in user_data_list])
 	
 	# Data
 	no_drift_map_x = []
@@ -45,7 +45,7 @@ def calibration_life_times(user_data_list):
 def recalibrations(user_data_list):
 	
 	# Collect data
-	nicknames = []
+	ids = []
 	recalibration_counts = []
 	recalibration_with_drift_map_counts = [] 
 	for user_data in user_data_list:
@@ -60,7 +60,7 @@ def recalibrations(user_data_list):
 				recalibration_count += count
 		
 		# Append data
-		nicknames.append(user_data.nickname)
+		ids.append(user_data.mid)
 		recalibration_counts.append(recalibration_count)
 		recalibration_with_drift_map_counts.append(recalibration_with_drift_map_count)
 	
@@ -69,9 +69,9 @@ def recalibrations(user_data_list):
 	ax = plt.gca()
 	ax.set_axisbelow(True)
 	plt.grid(True, axis='y')
-	plt.xticks(range(len(nicknames)), nicknames, rotation=45)
+	plt.xticks(range(len(ids)), ids, rotation=45)
 	plt.title('Recalibration Counts')
-	ind = np.arange(len(nicknames))
+	ind = np.arange(len(ids))
 	width = 0.4
 	bar_recalibration = plt.bar(ind - (width / 2.0), recalibration_counts, width, color="darkgreen")
 	bar_recalibration_with_drift_map = plt.bar(ind + (width / 2.0), recalibration_with_drift_map_counts, width, color="lightgreen")
@@ -82,12 +82,12 @@ def recalibrations(user_data_list):
 def youtube_hours(user_data_list):
 	
 	# Collect data
-	nicknames = []
+	ids = []
 	active_hours = []
 	foreground_hours = []
 	run_time_hours = []
 	for user_data in user_data_list:
-		nicknames.append(user_data.nickname)
+		ids.append(user_data.mid)
 		active_hours.append(user_data.youtube_active_hours)
 		foreground_hours.append(user_data.youtube_foreground_hours)
 		run_time_hours.append(user_data.youtube_run_time_hours)
@@ -97,11 +97,11 @@ def youtube_hours(user_data_list):
 	ax = plt.gca()
 	ax.set_axisbelow(True)
 	plt.grid(True, axis='y')
-	plt.xticks(range(len(nicknames)), nicknames, rotation=45)
+	plt.xticks(range(len(ids)), ids, rotation=45)
 	plt.title('YouTube Hours')
-	bar_run_time = plt.bar(range(len(nicknames)), run_time_hours, 0.5, color="black")
-	bar_foregound = plt.bar(range(len(nicknames)), foreground_hours, 0.5, color="darkgreen")
-	bar_active = plt.bar(range(len(nicknames)), active_hours, 0.5, color="lightgreen")
+	bar_run_time = plt.bar(range(len(ids)), run_time_hours, 0.5, color="black")
+	bar_foregound = plt.bar(range(len(ids)), foreground_hours, 0.5, color="darkgreen")
+	bar_active = plt.bar(range(len(ids)), active_hours, 0.5, color="lightgreen")
 	ax.legend((bar_run_time[0], bar_foregound[0], bar_active[0]), ('Run Time', 'Foreground', 'Active'))
 	fig.savefig(dfn.output_dir + 'youtube_hours' + dfn.plot_format, bbox_inches='tight')
 
@@ -131,7 +131,7 @@ def run_time_after_each_start(user_data_list):
 	ax = plt.gca()
 	
 	# y-axis, displaying the users
-	plt.yticks(range(len(user_data_list)), [x.nickname for x in user_data_list])
+	plt.yticks(range(len(user_data_list)), [x.mid for x in user_data_list])
 	
 	# Data
 	plot_data_x = []
@@ -165,7 +165,7 @@ def active_hours_after_each_start(user_data_list):
 	ax = plt.gca()
 	
 	# y-axis, displaying the users
-	plt.yticks(range(len(user_data_list)), [x.nickname for x in user_data_list])
+	plt.yticks(range(len(user_data_list)), [x.mid for x in user_data_list])
 	
 	# Data
 	plot_data_x = []
@@ -195,7 +195,7 @@ def active_hours_after_each_start(user_data_list):
 def general_metrics_counts(user_data_list):
 	
 	# Collect data
-	nicknames = []
+	ids = []
 	counts = {
 			'bookmarkAdding': ['bookmark_adding_count', 'Bookmark Adding Count', []],
 			'bookmarkUsage': ['bookmark_usage_count', 'Bookmark Usage Count', []],
@@ -210,7 +210,7 @@ def general_metrics_counts(user_data_list):
 			'unpause': ['unpause_count', 'Unpause Count', []],
 			'urlInput': ['url_input_count', 'URL Input Count', []]}
 	for user_data in user_data_list:
-		nicknames.append(user_data.nickname)
+		ids.append(user_data.mid)
 		counts['bookmarkAdding'][2].append(user_data.bookmark_adding_count)
 		counts['bookmarkUsage'][2].append(user_data.bookmark_usage_count)
 		counts['goBackUsage'][2].append(user_data.go_back_usage_count)
@@ -230,9 +230,9 @@ def general_metrics_counts(user_data_list):
 		ax = plt.gca()
 		ax.set_axisbelow(True)
 		plt.grid(True)
-		plt.xticks(range(len(nicknames)), nicknames, rotation=45)
+		plt.xticks(range(len(ids)), ids, rotation=45)
 		plt.title('Global Metrics: ' + item[1])
-		plt.bar(range(len(nicknames)), item[2], 0.5, color="lightgreen")
+		plt.bar(range(len(ids)), item[2], 0.5, color="lightgreen")
 		fig.savefig(dfn.output_dir + item[0] + dfn.plot_format, bbox_inches='tight')
 		print('.', end='')
 	
@@ -257,7 +257,7 @@ def daily_use(user_data_list):
 	
 	# y-axis, displaying the users
 	y = range(len(user_data_list))
-	plt.yticks(range(len(user_data_list)), [x.nickname for x in user_data_list])
+	plt.yticks(range(len(user_data_list)), [x.mid for x in user_data_list])
 	
 	# Data
 	plot_data_x = []
