@@ -15,6 +15,9 @@ class UserData():
 		self._data = data # dict pointer
 		self._setup_date = setup_date
 		
+		# Initial metrics
+		self.nickname = self._get_data(Keys.nickname)
+		
 		# Calculate metrics used for computations of other metrics
 		self._calc_required_metrics()
 		
@@ -32,6 +35,7 @@ class UserData():
 		
 		# Do written report
 		rp.print_line("MAMEM id: ", self.mid)
+		rp.print_line("Nickname: ", self.nickname)
 		rp.print_line("Setup Date: ", self._setup_date)
 		rp.print_line("Start Count: ", self.start_count)
 		rp.print_line("Latest Start: ", latest_start)
