@@ -4,7 +4,11 @@ import datetime
 ### Tasks with corresponding keywords in domain ###
 tasks = {
 		'general' : [''],
-		'facebook' : ['facebook.com', 'facebook.co.il']
+		'facebook' : ['facebook.com', 'facebook.co.il'],
+		'twitter' : ['twitter.com', 'twitter.co.il'],
+		'instagram' : ['instagram.com'],
+		'youtube' : ['youtube.com', 'youtu.be'],
+		'email' : ['mail.ru', 'live.com', 'outlook.live.com', 'mail.google.com', 'mail.yahoo.com', 'mail.walla.co.il', 'webmail01.uoa.gr']
 		}
 
 ### Parameters ###

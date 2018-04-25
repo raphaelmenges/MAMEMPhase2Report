@@ -59,12 +59,11 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	domain_frequency = sorted(domain_frequency.items(), key=operator.itemgetter(1))
 	domain_frequency.reverse()
 	
-	'''
-	
 	rp.print_line("### Most Popular Domains")
 	for (domain, frequency) in domain_frequency:
 		rp.print_line(domain + ":\t" + str(frequency))
 		
+	'''
 	### Plotting
 	print('Plotting', end='')
 	plt.calibration_life_times(user_data_list)
