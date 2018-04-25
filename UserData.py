@@ -146,7 +146,7 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.start_count = 0
-		self.daily_use = {} # day: {start_count, active_hours, session_count, char_input_count, click_count, avg_time_per_char};
+		self.daily_use = {} # day: {start_count, active_hours, session_count, char_input_count, char_input_seconds, click_count};
 		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
 		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
@@ -174,8 +174,9 @@ class UserData():
 								'active_hours': 0.0,
 								'session_count': 0,
 								'char_input_count': 0,
-								'click_count': 0,
-								'avg_time_per_char': 0.0}
+								'char_input_seconds': 0.0,
+								'click_count': 0
+								}
 						
 					# Update start day times
 					self.start_day_times.append((date.hour, date.minute, date.second))
@@ -277,17 +278,33 @@ class UserData():
 						for page in session['pages']:
 							
 							# Update daily use
-							# if day_string in self.daily_use:
+							if day_string in self.daily_use:
 							
-								# Character input count TODO
-								# self.daily_use[day_string]['char_input_count']
+								# Check for text input
+								if 'textInputs' in page:
+									
+									# Go over text input entries
+									for text_input in page['textInputs']:
+										
+										# Character distance
+										char_input_count = text_input['charDistance']
+									
+										# Character input count
+										self.daily_use[day_string]['char_input_count'] += char_input_count
+										
+										# Duration of character input
+										if char_input_count > 0:
+											self.daily_use[day_string]['char_input_seconds'] += text_input['duration']
 								
-								# Click count TODO
-								# self.daily_use[day_string]['click_count']
+								# Check for clicks
+								if 'clicks' in page:
+									
+									# Go over click entries
+									for click in page['clicks']:
 								
-								# Avgerage time per character TODO
-								# self.daily_use[day_string]['avg_time_per_char']
-							
+										# Click count
+										self.daily_use[day_string]['click_count'] += 1
+								
 							# Update YouTube
 							if 'youtube.com/watch?v=' in page['url']:
 								self.youtube_active_hours += page['durationUserActive'] / (60.0 * 60.0)
