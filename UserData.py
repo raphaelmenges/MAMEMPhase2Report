@@ -146,7 +146,7 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.start_count = 0
-		self.daily_use = {} # day: {start_count, active_hours};
+		self.daily_use = {} # day: {start_count, active_hours, session_count, char_input_count, click_count, avg_time_per_char};
 		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
 		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
@@ -166,10 +166,16 @@ class UserData():
 					
 					# Update daily use
 					day_string = hlp.from_date_to_day_string(date)
-					if day_string in self.daily_use:
+					if day_string in self.daily_use: # increment start count
 						self.daily_use[day_string]['start_count'] += 1
-					else:
-						self.daily_use[day_string] = {'start_count': 1, 'active_hours': 0.0 }
+					else: # create new date entry
+						self.daily_use[day_string] = {
+								'start_count': 1,
+								'active_hours': 0.0,
+								'session_count': 0,
+								'char_input_count': 0,
+								'click_count': 0,
+								'avg_time_per_char': 0.0}
 						
 					# Update start day times
 					self.start_day_times.append((date.hour, date.minute, date.second))
@@ -245,7 +251,12 @@ class UserData():
 						# Update daily use
 						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
 						if day_string in self.daily_use:
+							
+							# Active hours
 							self.daily_use[day_string]['active_hours'] += active_hours
+							
+							# Session count
+							self.daily_use[day_string]['session_count'] += 1
 							
 						# Update total run time
 						runtime_hours = session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime (without training)
@@ -264,6 +275,20 @@ class UserData():
 						
 						# Go over pages
 						for page in session['pages']:
+							
+							# Update daily use
+							# if day_string in self.daily_use:
+							
+								# Character input count TODO
+								# self.daily_use[day_string]['char_input_count']
+								
+								# Click count TODO
+								# self.daily_use[day_string]['click_count']
+								
+								# Avgerage time per character TODO
+								# self.daily_use[day_string]['avg_time_per_char']
+							
+							# Update YouTube
 							if 'youtube.com/watch?v=' in page['url']:
 								self.youtube_active_hours += page['durationUserActive'] / (60.0 * 60.0)
 								self.youtube_foreground_hours += page['durationInForeground'] / (60.0 * 60.0)
