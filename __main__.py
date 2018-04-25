@@ -34,6 +34,8 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 				break
 	user_data_list = sorted_user_data_list
 	
+	'''
+	
 	# Initialize report
 	rp.init_file()
 	
@@ -77,14 +79,20 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	print('.', end='')
 	plt.active_hours_after_each_start(user_data_list)
 	print('.', end='')
+	'''
 	plt.daily_use(user_data_list)
+	'''
 	print('.', end='')
 	plt.general_metrics_counts(user_data_list)
 	print('.', end='')
 	print('finished.')
 	
+	'''
+	
 	# Export
 	print('Export', end='')
 	ex.accumulated_data_per_user(user_data_list)
+	print('.', end='')
+	ex.daily_use_per_user(user_data_list)
 	print('.', end='')
 	print('finished.')
