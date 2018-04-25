@@ -146,7 +146,8 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.start_count = 0
-		self.daily_use = {} # day: {start_count, active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count};
+		self.daily_use = {} # day: {start_count,
+		# general: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count} };
 		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
 		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
@@ -168,16 +169,13 @@ class UserData():
 					day_string = hlp.from_date_to_day_string(date)
 					if day_string in self.daily_use: # increment start count
 						self.daily_use[day_string]['start_count'] += 1
-					else: # create new date entry
-						self.daily_use[day_string] = {
-								'start_count': 1,
-								'active_hours': 0.0,
-								'session_count': 0,
-								'page_count': 0,
-								'char_input_count': 0,
-								'char_input_seconds': 0.0,
-								'click_count': 0
-								}
+					else: # create new date value entry
+						self.daily_use[day_string] = {'start_count': 1}
+						
+						# Create metrics for every task (like general, facebook...)
+						tasks = ['general']
+						for task in tasks:
+							self.daily_use[day_string][task] = { 'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
 						
 					# Update start day times
 					self.start_day_times.append((date.hour, date.minute, date.second))
@@ -255,13 +253,13 @@ class UserData():
 						if day_string in self.daily_use:
 							
 							# Active hours
-							self.daily_use[day_string]['active_hours'] += active_hours
+							self.daily_use[day_string]['general']['active_hours'] += active_hours
 							
 							# Session count
-							self.daily_use[day_string]['session_count'] += 1
+							self.daily_use[day_string]['general']['session_count'] += 1
 							
 							# Page count
-							self.daily_use[day_string]['page_count'] += session['pageCount']
+							self.daily_use[day_string]['general']['page_count'] += session['pageCount']
 							
 						# Update total run time
 						runtime_hours = session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime (without training)
@@ -294,11 +292,11 @@ class UserData():
 										char_input_count = text_input['charDistance']
 									
 										# Character input count
-										self.daily_use[day_string]['char_input_count'] += char_input_count
+										self.daily_use[day_string]['general']['char_input_count'] += char_input_count
 										
 										# Duration of character input
 										if char_input_count > 0:
-											self.daily_use[day_string]['char_input_seconds'] += text_input['duration']
+											self.daily_use[day_string]['general']['char_input_seconds'] += text_input['duration']
 								
 								# Check for clicks
 								if 'clicks' in page:
@@ -307,7 +305,7 @@ class UserData():
 									for click in page['clicks']:
 								
 										# Click count
-										self.daily_use[day_string]['click_count'] += 1
+										self.daily_use[day_string]['general']['click_count'] += 1
 								
 							# Update YouTube
 							if 'youtube.com/watch?v=' in page['url']:

@@ -270,7 +270,7 @@ def daily_use(user_data_list):
 			   ha="center", va="bottom", size=7, weight='bold')
 			
 			# Active hours
-			ax.annotate(format(use['active_hours'], '.2f'), (x,y),
+			ax.annotate(format(use['general']['active_hours'], '.2f'), (x,y),
 			   ha="center", va="top", size=5)
 	
 	# Grid
@@ -279,6 +279,6 @@ def daily_use(user_data_list):
 	plt.grid(True)
 	
 	# Plot it
-	plt.title('Daily Usage - Start Count (bold) and Active Hours (in Web)')
+	plt.title('Daily Use - Start Count (bold) and Active Hours (in Web)')
 	plt.scatter(plot_data_x,plot_data_y,s=175, color='lightgreen')
-	fig.savefig(dfn.output_dir + 'daily_usage' + dfn.plot_format, bbox_inches='tight')
+	fig.savefig(dfn.output_dir + 'daily_use' + dfn.plot_format, bbox_inches='tight')

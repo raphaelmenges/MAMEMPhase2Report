@@ -51,16 +51,16 @@ def daily_use_per_user(user_data_list):
 						if metric == 'seconds_per_char':
 							
 							# Seconds per character
-							char_input_count = metric_value_dict[day_string] = user_data.daily_use[day_string]['char_input_count']
+							char_input_count = metric_value_dict[day_string] = user_data.daily_use[day_string]['general']['char_input_count']
 							if char_input_count > 0:
-								metric_value_dict[day_string] = float(user_data.daily_use[day_string]['char_input_seconds']) / char_input_count
+								metric_value_dict[day_string] = float(user_data.daily_use[day_string]['general']['char_input_seconds']) / char_input_count
 							else:
 								metric_value_dict[day_string] = float('nan') # take fallback
 							
 						else:
 							
 							# Other metric
-							metric_value_dict[day_string] = user_data.daily_use[day_string][metric]
+							metric_value_dict[day_string] = user_data.daily_use[day_string]['general'][metric]
 						
 					else:
 						
