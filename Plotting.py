@@ -240,15 +240,7 @@ def general_metrics_counts(user_data_list):
 def daily_use(user_data_list):
 	
 	# Get days of the experiment as range
-	daily_use_dates = []
-	for user_data in user_data_list:
-		for day_string in user_data.daily_use.keys():
-			daily_use_dates.append(hlp.from_day_string_to_date(day_string)) # convert date string back to datetime
-	daily_use_dates = list(set(daily_use_dates)) # make datetimes unique
-	daily_use_dates.sort() # sort datetimes
-	min_date = daily_use_dates[0]
-	max_date = daily_use_dates[-1]
-	date_range = list(hlp.date_range(min_date, max_date, include_end=True))
+	date_range = hlp.date_range_from_user_data_list(user_data_list)
 	
 	# x-axis, displaying the date range
 	fig = plt.figure(figsize=(12, 5))
@@ -266,7 +258,7 @@ def daily_use(user_data_list):
 		for day_string, use in user.daily_use.items(): # go over daily use of user
 			
 			# Gather coordinate
-			x = (hlp.from_day_string_to_date(day_string) - min_date).days # dates since start of experiment used as index in x-axis
+			x = (hlp.from_day_string_to_date(day_string) - date_range[0]).days # dates since start of experiment used as index in x-axis
 			y = idx # just the user index
 			
 			# Render big dot

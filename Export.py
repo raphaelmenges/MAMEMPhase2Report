@@ -19,15 +19,7 @@ def accumulated_data_per_user(user_data_list):
 def daily_use_per_user(user_data_list):
 	
 	# Get days of the experiment as range
-	daily_use_dates = []
-	for user_data in user_data_list:
-		for day_string in user_data.daily_use.keys():
-			daily_use_dates.append(hlp.from_day_string_to_date(day_string)) # convert date string back to datetime
-	daily_use_dates = list(set(daily_use_dates)) # make datetimes unique
-	daily_use_dates.sort() # sort datetimes
-	min_date = daily_use_dates[0]
-	max_date = daily_use_dates[-1]
-	date_range = list(hlp.date_range(min_date, max_date, include_end=True))
+	date_range = hlp.date_range_from_user_data_list(user_data_list)
 	date_range_string_list =  [str(x.day) + '/' + str(x.month) for x in date_range]
 	
 	# Do it for all metrics
