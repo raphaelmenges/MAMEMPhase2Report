@@ -23,7 +23,7 @@ def daily_use_per_user(user_data_list):
 	date_range_string_list =  [str(x.day) + '/' + str(x.month) for x in date_range]
 	
 	# Do it for all tasks of the users
-	for task in dfn.tasks:
+	for task in dfn.tasks.keys():
 		
 		# Do it for all metrics
 		metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'seconds_per_char', 'click_count']

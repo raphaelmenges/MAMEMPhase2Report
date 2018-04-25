@@ -148,7 +148,7 @@ class UserData():
 		### Metrics #############################################################
 		self.start_count = 0
 		self.daily_use = {} # day: {start_count,
-		# general: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count} };
+		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count} };
 		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
 		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
@@ -174,7 +174,7 @@ class UserData():
 						self.daily_use[day_string] = {'start_count': 1}
 						
 						# Create metrics for every task (like general, facebook...)
-						for task in dfn.tasks:
+						for task in dfn.tasks.keys():
 							self.daily_use[day_string][task] = { 'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
 						
 					# Update start day times
@@ -242,24 +242,40 @@ class UserData():
 					# Barrier to ignore empty data point and before-setup data
 					if (session is not None) and (self._after_setup(session['startDate'])):
 						
+						# Extract domain
+						domain = session['domain']
+						
 						# Some pre-computations
 						active_hours = session['durationUserActive'] / (60.0 * 60.0) # from seconds to hours
 						
 						# Update total active hours
 						self.total_active_hours += active_hours 
 						
-						# Update daily use
+						# Update daily use TODO: might break if there is somebody using the system across midnight. if so, add inbetween days to daily_usage
 						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
-						if day_string in self.daily_use:
+						
+						### Daily use ###
+						
+						# Go over tasks
+						for task, keywords in dfn.tasks.items():
 							
-							# Active hours
-							self.daily_use[day_string]['general']['active_hours'] += active_hours
+							# Check whether domain contains the keyword for specific task
+							session_belongs_to_task = False
+							for keyword in keywords:
+								session_belongs_to_task = session_belongs_to_task or keyword in domain
 							
-							# Session count
-							self.daily_use[day_string]['general']['session_count'] += 1
-							
-							# Page count
-							self.daily_use[day_string]['general']['page_count'] += session['pageCount']
+							# If session belongs to specified task, add metrics measurement
+							if session_belongs_to_task:
+								# Active hours
+								self.daily_use[day_string][task]['active_hours'] += active_hours
+								
+								# Session count
+								self.daily_use[day_string][task]['session_count'] += 1
+								
+								# Page count
+								self.daily_use[day_string][task]['page_count'] += session['pageCount']
+						
+						#################
 							
 						# Update total run time
 						runtime_hours = session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime (without training)
@@ -270,7 +286,6 @@ class UserData():
 						self.active_hours_per_start[session['startIndex']] += session['durationUserActive'] / (60.0 * 60.0)
 						
 						# Update domain frequency
-						domain = session['domain']
 						if domain in self.domain_frequency:
 							self.domain_frequency[domain] += 1
 						else:
@@ -279,34 +294,46 @@ class UserData():
 						# Go over pages
 						for page in session['pages']:
 							
-							# Update daily use
-							if day_string in self.daily_use:
+							### Daily use ###
 							
-								# Check for text input
-								if 'textInputs' in page:
-									
-									# Go over text input entries
-									for text_input in page['textInputs']:
+							# Go over tasks
+							for task, keywords in dfn.tasks.items():
+								
+								# Check whether domain contains the keyword for specific task
+								session_belongs_to_task = False
+								for keyword in keywords:
+									session_belongs_to_task = session_belongs_to_task or keyword in domain
+								
+								# If session belongs to specified task, add metrics measurement
+								if session_belongs_to_task:
+								
+									# Check for text input
+									if 'textInputs' in page:
 										
-										# Character distance
-										char_input_count = text_input['charDistance']
-									
-										# Character input count
-										self.daily_use[day_string]['general']['char_input_count'] += char_input_count
+										# Go over text input entries
+										for text_input in page['textInputs']:
+											
+											# Character distance
+											char_input_count = text_input['charDistance']
 										
-										# Duration of character input
-										if char_input_count > 0:
-											self.daily_use[day_string]['general']['char_input_seconds'] += text_input['duration']
-								
-								# Check for clicks
-								if 'clicks' in page:
+											# Character input count
+											self.daily_use[day_string][task]['char_input_count'] += char_input_count
+											
+											# Duration of character input
+											if char_input_count > 0:
+												self.daily_use[day_string][task]['char_input_seconds'] += text_input['duration']
 									
-									# Go over click entries
-									for click in page['clicks']:
-								
-										# Click count
-										self.daily_use[day_string]['general']['click_count'] += 1
-								
+									# Check for clicks
+									if 'clicks' in page:
+										
+										# Go over click entries
+										for click in page['clicks']:
+									
+											# Click count
+											self.daily_use[day_string][task]['click_count'] += 1
+							
+							#################
+							
 							# Update YouTube
 							if 'youtube.com/watch?v=' in page['url']:
 								self.youtube_active_hours += page['durationUserActive'] / (60.0 * 60.0)

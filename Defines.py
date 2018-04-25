@@ -1,8 +1,11 @@
 import collections
 import datetime
 
-### Tasks ###
-tasks = ['general', 'facebook']
+### Tasks with corresponding keywords in domain ###
+tasks = {
+		'general' : [''],
+		'facebook' : ['facebook.com', 'facebook.co.il']
+		}
 
 ### Parameters ###
 
