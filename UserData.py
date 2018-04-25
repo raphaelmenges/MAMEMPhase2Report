@@ -1,6 +1,7 @@
 import Keys
 import Helpers as hlp
 import Report as rp
+import Defines as dfn
 from functools import reduce
 from operator import getitem
 
@@ -173,8 +174,7 @@ class UserData():
 						self.daily_use[day_string] = {'start_count': 1}
 						
 						# Create metrics for every task (like general, facebook...)
-						tasks = ['general']
-						for task in tasks:
+						for task in dfn.tasks:
 							self.daily_use[day_string][task] = { 'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
 						
 					# Update start day times

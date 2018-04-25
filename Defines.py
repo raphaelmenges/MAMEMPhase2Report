@@ -1,6 +1,9 @@
 import collections
 import datetime
 
+### Tasks ###
+tasks = ['general', 'facebook']
+
 ### Parameters ###
 
 output_dir = './output/'
