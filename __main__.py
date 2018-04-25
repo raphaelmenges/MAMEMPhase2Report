@@ -34,8 +34,6 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 				break
 	user_data_list = sorted_user_data_list
 	
-	'''
-	
 	# Initialize report
 	rp.init_file()
 	
@@ -60,6 +58,8 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 		domain_frequency = domain_frequency + Counter(user_data.domain_frequency)
 	domain_frequency = sorted(domain_frequency.items(), key=operator.itemgetter(1))
 	domain_frequency.reverse()
+	
+	'''
 	
 	rp.print_line("### Most Popular Domains")
 	for (domain, frequency) in domain_frequency:

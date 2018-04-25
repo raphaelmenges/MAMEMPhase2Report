@@ -29,11 +29,9 @@ def daily_use_per_user(user_data_list):
 	max_date = daily_use_dates[-1]
 	date_range = list(hlp.date_range(min_date, max_date, include_end=True))
 	date_range_string_list =  [str(x.day) + '/' + str(x.month) for x in date_range]
-
-	# TODO: char_input_count / char_input_seconds
 	
 	# Do it for all metrics
-	metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'click_count']
+	metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'seconds_per_char', 'click_count']
 	for metric in metrics:
 		
 		# Print progress
@@ -46,7 +44,7 @@ def daily_use_per_user(user_data_list):
 			# Write header
 			output.writerow([metric] + date_range_string_list)
 			
-			# Go over users
+			# Go over users to write rows
 			for user_data in user_data_list:
 				
 				# Go over complete range of days and look for data
@@ -56,11 +54,31 @@ def daily_use_per_user(user_data_list):
 					# Check whether data is available for date
 					day_string = hlp.from_date_to_day_string(date)
 					if day_string in user_data.daily_use: # take available data
-						metric_value_dict[day_string] = user_data.daily_use[day_string][metric]
+						
+						# Decide on action per metric
+						if metric == 'seconds_per_char':
+							
+							# Seconds per character
+							char_input_count = metric_value_dict[day_string] = user_data.daily_use[day_string]['char_input_count']
+							if char_input_count > 0:
+								metric_value_dict[day_string] = float(user_data.daily_use[day_string]['char_input_seconds']) / char_input_count
+							else:
+								metric_value_dict[day_string] = float('nan') # take fallback
+							
+						else:
+							
+							# Other metric
+							metric_value_dict[day_string] = user_data.daily_use[day_string][metric]
+						
 					else:
-						metric_value_dict[day_string] = 0 # float('nan') # take fallback
+						
+						# Decide on action per metric
+						if metric == 'seconds_per_char':
+							metric_value_dict[day_string] = float('nan') # take fallback
+						else:
+							metric_value_dict[day_string] = 0 # take fallback
 				
-				# Bring metric values into list
+				# Bring metric values into list (which fits the dates in header)
 				metric_value_list = []
 				for key in metric_value_dict.keys():
 					metric_value_list.append(metric_value_dict[key])
