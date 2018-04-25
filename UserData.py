@@ -146,7 +146,7 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.start_count = 0
-		self.daily_use = {} # day: {start_count, active_hours, session_count, char_input_count, char_input_seconds, click_count};
+		self.daily_use = {} # day: {start_count, active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count};
 		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
 		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
@@ -173,6 +173,7 @@ class UserData():
 								'start_count': 1,
 								'active_hours': 0.0,
 								'session_count': 0,
+								'page_count': 0,
 								'char_input_count': 0,
 								'char_input_seconds': 0.0,
 								'click_count': 0
@@ -258,6 +259,9 @@ class UserData():
 							
 							# Session count
 							self.daily_use[day_string]['session_count'] += 1
+							
+							# Page count
+							self.daily_use[day_string]['page_count'] += session['pageCount']
 							
 						# Update total run time
 						runtime_hours = session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime (without training)

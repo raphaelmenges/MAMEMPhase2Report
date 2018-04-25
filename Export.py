@@ -33,8 +33,11 @@ def daily_use_per_user(user_data_list):
 	# TODO: char_input_count / char_input_seconds
 	
 	# Do it for all metrics
-	metrics = ['active_hours', 'session_count', 'char_input_count', 'click_count']
+	metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'click_count']
 	for metric in metrics:
+		
+		# Print progress
+		print('.', end='')
 		
 		# Open file to write to
 		with open(dfn.output_dir + metric + '.csv', 'w', newline='') as csvfile:
