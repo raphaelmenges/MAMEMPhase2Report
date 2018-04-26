@@ -399,8 +399,6 @@ class UserData():
 			# Only consider domains that are not in social tasks
 			if not domain_is_social_task:
 				self.domain_activity_non_social_task[domain] = activity
-				
-		print(self.domain_activity)
 	
 	# Check whether date was after setup
 	def _after_setup(self, date_string):

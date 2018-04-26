@@ -26,8 +26,8 @@ def daily_use_per_user(user_data_list):
 	for task in dfn.tasks.keys():
 		
 		# Do it for all metrics
-		metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'seconds_per_char', 'click_count']
-		for metric in metrics:
+		task_metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'seconds_per_char', 'click_count']
+		for metric in task_metrics:
 			
 			# Print progress
 			print('.', end='')
@@ -79,3 +79,30 @@ def daily_use_per_user(user_data_list):
 					
 					# Write user data
 					output.writerow([user_data.mid] + metric_value_list)
+					
+	# Do it for the three most visited domain which are not social tasks
+	domain_metrics = ['frequency', 'page_count', 'active_hours', 'char_input_count', 'click_count']
+
+	# Go over users to write files about activity on non-social domains
+	for user_data in user_data_list:
+	
+		# Print progress
+		print('.', end='')
+		
+		# Open file to write to
+		with open(dfn.output_dir + 'non_social_' + user_data.mid + '.csv', 'w', newline='') as csvfile:
+			output = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+			
+			# Write header
+			output.writerow(['non_social_' + user_data.mid] + domain_metrics)
+			
+			# Go over all domains
+			for domain, activity in user_data.domain_activity_non_social_task.items():
+				
+				# Collect row
+				row = [domain]
+				for metric in domain_metrics:
+					row.append(activity[metric])
+			
+				# Write domain data
+				output.writerow(row)
