@@ -6,7 +6,6 @@ from functools import reduce
 from collections import OrderedDict
 import operator
 
-
 class UserData():
 
 	# Initialization
@@ -53,7 +52,8 @@ class UserData():
 		### Metrics #############################################################
 		self.start_dates = {} # key is start index, value is dict of start date and end date
 		self.domain_frequency = {} # dictionary storing domain and visit frequency
-		self.domain_activity = OrderedDict() # ordered dict of domain and dict about frequency, page_count, active_hours, char_input_count, click_count
+		self.domain_activity = OrderedDict() # ordered dict of domain and dict about frequency, page_count,
+		# active_hours, char_input_count, click_count; further filled in _calc_page_acitivity_metrics
 		#########################################################################
 		
 		# Fill starts
@@ -122,7 +122,7 @@ class UserData():
 		# Go over general metrics
 		for idx in range(len(general_metrics)):
 			
-			# Check, whether metric key exists in general struct
+			# Check, whether metric key exists in general struct from Firebase
 			metric_key = general_metrics[idx][0]
 			general_dict = self._data['general']
 			if metric_key in general_dict:
@@ -140,8 +140,6 @@ class UserData():
 								
 								# Update count
 								general_metrics[idx][1] += 1
-								
-								# TODO: update metric specific values
 							
 		# Make a dictionary out of the list
 		general_metrics_dict = dict(general_metrics)
@@ -168,7 +166,7 @@ class UserData():
 		self.start_count = 0
 		self.daily_use = {} # day: {start_count,
 		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count} };
-		# day encoded as d-m-Y string; active_hours filled in _calc_page_acitivity_metrics
+		# day encoded as d-m-Y string; further filled in _calc_page_acitivity_metrics
 		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
 		
@@ -192,9 +190,9 @@ class UserData():
 					else: # create new date value entry
 						self.daily_use[day_string] = {'start_count': 1}
 						
-						# Create metrics for every task (like general, facebook...)
-						for task in dfn.tasks.keys():
-							self.daily_use[day_string][task] = { 'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
+						# Create metrics for every social task (like general, facebook...)
+						for task in dfn.social_tasks.keys():
+							self.daily_use[day_string][task] = {'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
 						
 					# Update start day times
 					self.start_day_times.append((date.hour, date.minute, date.second))
@@ -203,7 +201,7 @@ class UserData():
 	def _calc_calibration_metrics(self):
 		
 		# Helpers
-		calibration_counts = [0]* self._get_data(Keys.start_count)
+		calibration_counts = [0] * self._get_data(Keys.start_count)
 		
 		### Metrics #############################################################
 		self.recalibrations_per_start = [] # triple of start index, re(!)calibration count and whether drift map was used
@@ -217,11 +215,13 @@ class UserData():
 				# Barrier to ignore before-setup data
 				if self._after_setup(calibration['date']):
 					
+					# TODO: count active time with calibration
+					
 					# Helpers
 					start_index = calibration['startIndex']
-					life_time = (self.start_dates[str(start_index)]['end'] - self.start_dates[str(start_index)]['start'])
-					life_time_days, life_time_seconds = life_time.days, life_time.seconds
-					life_time_hours = life_time_days * 24.0 + life_time_seconds / 3600.0
+					rum_time = (self.start_dates[str(start_index)]['end'] - self.start_dates[str(start_index)]['start'])
+					rum_time_days, rum_time_seconds = rum_time.days, rum_time.seconds
+					run_time_hours = rum_time_days * 24.0 + rum_time_seconds / 3600.0
 					
 					# Increase counts of recalibration
 					calibration_counts[start_index] += 1
@@ -229,7 +229,7 @@ class UserData():
 					# Set calibration life times list entries
 					self.calibration_life_times.append(
 							{'start_index': start_index,
-							'life_time_hours': life_time_hours,
+							'run_time_hours': run_time_hours,
 							'drift_map': self._data['general']['start'][str(start_index)]['useDriftMap']})
 					
 		# Filter all entries with zero count (either before setup or people exited the system)
@@ -237,7 +237,7 @@ class UserData():
 			if(count >= 1): # zero means there was no calibration for this start, at all
 				self.recalibrations_per_start.append((start_index, count-1, self._data['general']['start'][str(start_index)]['useDriftMap'])) # re(!)calibrations, subtracting one
 		
-	# Total time in front of eye tracker TODO: make this method more abstract, like above
+	# Go over page activity
 	def _calc_page_acitivity_metrics(self):
 		
 		### Metrics #############################################################
@@ -270,13 +270,13 @@ class UserData():
 						# Update total active hours
 						self.total_active_hours += active_hours 
 						
-						# Update daily use TODO: might break if there is somebody using the system across midnight. if so, add inbetween days to daily_usage
+						# Update daily use TODO: might break if there is somebody using the system across midnight. If it breaks, add inbetween days to daily_usage
 						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
 						
 						### Daily use ###
 						
 						# Go over tasks
-						for task, keywords in dfn.tasks.items():
+						for task, keywords in dfn.social_tasks.items():
 							
 							# Check whether domain contains the keyword for specific task
 							session_belongs_to_task = False
@@ -285,6 +285,7 @@ class UserData():
 							
 							# If session belongs to specified task, add metrics measurement
 							if session_belongs_to_task:
+								
 								# Active hours
 								self.daily_use[day_string][task]['active_hours'] += active_hours
 								
@@ -310,7 +311,7 @@ class UserData():
 							
 						# Update run time per start
 						self.run_time_hours_per_start[session['startIndex']] += runtime_hours
-						self.active_hours_per_start[session['startIndex']] += session['durationUserActive'] / (60.0 * 60.0)
+						self.active_hours_per_start[session['startIndex']] += active_hours
 						
 						# Go over pages
 						for page in session['pages']:
@@ -318,7 +319,7 @@ class UserData():
 							### Daily use ###
 							
 							# Go over tasks
-							for task, keywords in dfn.tasks.items():
+							for task, keywords in dfn.social_tasks.items():
 								
 								# Check whether domain contains the keyword for specific task
 								session_belongs_to_task = False
@@ -386,7 +387,7 @@ class UserData():
 			domain_is_social_task = False
 			
 			# Go over tasks
-			for task, keywords in dfn.tasks.items():
+			for task, keywords in dfn.social_tasks.items():
 				
 				# Skip general task, as it accumulates everything and applies for all domains
 				if task == 'general':

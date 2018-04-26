@@ -2,7 +2,7 @@ import collections
 import datetime
 
 ### (Social) Tasks with corresponding keywords in domain ###
-tasks = {
+social_tasks = {
 		'general' : [''],
 		'facebook' : ['facebook.com', 'facebook.co.il', 'he-il.facebook.com', 'facebook.gr'],
 		'twitter' : ['twitter.com', 'twitter.co.il'],

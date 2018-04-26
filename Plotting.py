@@ -23,10 +23,10 @@ def calibration_life_times(user_data_list):
 			
 			# Decide whether drift map was used or not
 			if calibration['drift_map']:
-				drift_map_x.append(calibration['life_time_hours'])
+				drift_map_x.append(calibration['run_time_hours'])
 				drift_map_y.append(idx)
 			else:
-				no_drift_map_x.append(calibration['life_time_hours'])
+				no_drift_map_x.append(calibration['run_time_hours'])
 				no_drift_map_y.append(idx)
 			
 	# Grid
@@ -266,12 +266,10 @@ def daily_use(user_data_list):
 			plot_data_y.append(y)
 			
 			# Start count
-			ax.annotate(str(use['start_count']), (x,y),
-			   ha="center", va="bottom", size=7, weight='bold')
+			ax.annotate(str(use['start_count']), (x,y), ha="center", va="bottom", size=7, weight='bold')
 			
 			# Active hours
-			ax.annotate(format(use['general']['active_hours'], '.2f'), (x,y),
-			   ha="center", va="top", size=5)
+			ax.annotate(format(use['general']['active_hours'], '.2f'), (x,y), ha="center", va="top", size=5)
 	
 	# Grid
 	plt.rc('grid', linestyle='dashed', color='grey')
@@ -280,5 +278,5 @@ def daily_use(user_data_list):
 	
 	# Plot it
 	plt.title('Daily Use - Start Count (bold) and Active Hours (in Web)')
-	plt.scatter(plot_data_x,plot_data_y,s=175, color='lightgreen')
+	plt.scatter(plot_data_x, plot_data_y, s=175, color='lightgreen')
 	fig.savefig(dfn.output_dir + 'daily_use' + dfn.plot_format, bbox_inches='tight')

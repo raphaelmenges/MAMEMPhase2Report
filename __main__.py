@@ -23,6 +23,7 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 			if uid == entry.uid: # uid matches
 				print('.', end='')
 				user_data_list.append(ud.UserData(uid, entry.mid, user, entry.setup_date))
+				
 	print('finished.')
 	
 	# Sort user data list same as filter list
@@ -63,7 +64,6 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	for (domain, frequency) in domain_frequency_list:
 		rp.print_line(domain + ":\t" + str(frequency))
 		
-	'''
 	### Plotting
 	print('Plotting', end='')
 	plt.calibration_life_times(user_data_list)
@@ -78,15 +78,11 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	print('.', end='')
 	plt.active_hours_after_each_start(user_data_list)
 	print('.', end='')
-	'''
 	plt.daily_use(user_data_list)
-	'''
 	print('.', end='')
 	plt.general_metrics_counts(user_data_list)
 	print('.', end='')
 	print('finished.')
-	
-	'''
 	
 	# Export
 	print('Export', end='')

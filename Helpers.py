@@ -8,7 +8,7 @@ def date_range(start_date, end_date, include_end = False):
 	for ordinal in range(start_date.toordinal(), end_date.toordinal() + end):
 		yield datetime.datetime.fromordinal(ordinal)
 
-# Converts datetime object to Y-m-d string (mostly used as key for daily activity)
+# Converts datetime object to d-m-Y string (mostly used as key for daily activity)
 def from_date_to_day_string(date):
 	return str(date.day) + '-' + str(date.month) + '-' + str(date.year)
 
