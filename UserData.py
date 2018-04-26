@@ -3,7 +3,7 @@ import Helpers as hlp
 import Report as rp
 import Defines as dfn
 from functools import reduce
-from operator import getitem
+import operator
 
 class UserData():
 
@@ -50,6 +50,8 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.start_dates = {} # key is start index, value is dict of start date and end date
+		self.domain_frequency = {} # dictionary storing domain and visit frequency
+		self.domain_frequency_list = [] # sorted list of the tuple (domain, frequency), sorted descending after frequency
 		#########################################################################
 		
 		# Fill starts
@@ -81,7 +83,19 @@ class UserData():
 						# Decide on update of end date
 						if end_date > self.start_dates[str(start_index)]['end']:
 							self.start_dates[str(start_index)]['end'] = end_date
-						
+							
+						# Extract domain
+						domain = session['domain']
+							
+						# Update domain frequency
+						if domain in self.domain_frequency:
+							self.domain_frequency[domain] += 1
+						else:
+							self.domain_frequency[domain] = 1
+							
+		self.domain_frequency_list = sorted(self.domain_frequency.items(), key=operator.itemgetter(1))
+		self.domain_frequency_list.reverse()
+		
 	# Go over general metrics
 	def _calc_general_metrics(self):
 		
@@ -229,7 +243,6 @@ class UserData():
 		self.youtube_active_hours = 0.0
 		self.youtube_foreground_hours = 0.0
 		self.youtube_hours = 0.0
-		self.domain_frequency = {} # dictionary storing domain and visit frequency
 		#########################################################################
 		
 		# Go over page activity items 
@@ -284,12 +297,6 @@ class UserData():
 						# Update run time per start
 						self.run_time_hours_per_start[session['startIndex']] += runtime_hours
 						self.active_hours_per_start[session['startIndex']] += session['durationUserActive'] / (60.0 * 60.0)
-						
-						# Update domain frequency
-						if domain in self.domain_frequency:
-							self.domain_frequency[domain] += 1
-						else:
-							self.domain_frequency[domain] = 1
 						
 						# Go over pages
 						for page in session['pages']:
@@ -351,4 +358,4 @@ class UserData():
 		copy_path = list(key_path) # copy keys
 		for arg in args: # append custom keys
 			copy_path.append(str(arg))
-		return reduce(getitem, copy_path, self._data)
+		return reduce(operator.getitem, copy_path, self._data)
