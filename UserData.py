@@ -3,7 +3,9 @@ import Helpers as hlp
 import Report as rp
 import Defines as dfn
 from functools import reduce
+from collections import OrderedDict
 import operator
+
 
 class UserData():
 
@@ -51,7 +53,7 @@ class UserData():
 		### Metrics #############################################################
 		self.start_dates = {} # key is start index, value is dict of start date and end date
 		self.domain_frequency = {} # dictionary storing domain and visit frequency
-		self.domain_frequency_list = [] # sorted list of the tuple (domain, frequency), sorted descending after frequency
+		self.domain_activity = OrderedDict() # ordered dict of domain and dict about frequency, page_count, active_hours, char_input_count, click_count
 		#########################################################################
 		
 		# Fill starts
@@ -93,9 +95,12 @@ class UserData():
 						else:
 							self.domain_frequency[domain] = 1
 							
-		self.domain_frequency_list = sorted(self.domain_frequency.items(), key=operator.itemgetter(1))
-		self.domain_frequency_list.reverse()
+		domain_frequency_list = sorted(self.domain_frequency.items(), key=operator.itemgetter(1))
+		domain_frequency_list.reverse()
 		
+		for domain, frequency in domain_frequency_list:
+			self.domain_activity[domain] = {'frequency' : frequency, 'active_hours' : 0.0, 'page_count' : 0, 'char_input_count' : 0, 'click_count' : 0}
+			
 	# Go over general metrics
 	def _calc_general_metrics(self):
 		
@@ -243,6 +248,7 @@ class UserData():
 		self.youtube_active_hours = 0.0
 		self.youtube_foreground_hours = 0.0
 		self.youtube_hours = 0.0
+		self.domain_activity_non_social_task = OrderedDict()
 		#########################################################################
 		
 		# Go over page activity items 
@@ -289,6 +295,14 @@ class UserData():
 								self.daily_use[day_string][task]['page_count'] += session['pageCount']
 						
 						#################
+						
+						### Domain activity ###
+						
+						self.domain_activity[domain]['active_hours'] += active_hours
+						
+						self.domain_activity[domain]['page_count'] += session['pageCount']
+						
+						#######################
 							
 						# Update total run time
 						runtime_hours = session['durationInForeground'] / (60.0 * 60.0) # accumulation of foreground should give runtime (without training)
@@ -341,13 +355,52 @@ class UserData():
 							
 							#################
 							
+							### Domain activity ###
+							
+							# Check for text input
+							if 'textInputs' in page:
+								
+								# Go over text input entries
+								for text_input in page['textInputs']:
+									
+									self.domain_activity[domain]['char_input_count'] += text_input['charDistance']
+									
+							# Check for clicks
+							if 'clicks' in page:
+								
+								# Go over click entries
+								for click in page['clicks']:
+									
+									self.domain_activity[domain]['click_count'] += 1
+									
+							#######################
+							
 							# Update YouTube
 							if 'youtube.com/watch?v=' in page['url']:
 								self.youtube_active_hours += page['durationUserActive'] / (60.0 * 60.0)
 								self.youtube_foreground_hours += page['durationInForeground'] / (60.0 * 60.0)
 								self.youtube_hours += page['duration'] / (60.0 * 60.0)
-	
-	####################
+		
+		# Filter social tasks from domain activity
+		for domain, activity in self.domain_activity.items():
+			domain_is_social_task = False
+			
+			# Go over tasks
+			for task, keywords in dfn.tasks.items():
+				
+				# Skip general task, as it accumulates everything and applies for all domains
+				if task == 'general':
+					continue
+				
+				# Check whether domain contains the keyword for specific task
+				for keyword in keywords:
+					domain_is_social_task = domain_is_social_task or keyword in domain
+					
+			# Only consider domains that are not in social tasks
+			if not domain_is_social_task:
+				self.domain_activity_non_social_task[domain] = activity
+				
+		print(self.domain_activity)
 	
 	# Check whether date was after setup
 	def _after_setup(self, date_string):
