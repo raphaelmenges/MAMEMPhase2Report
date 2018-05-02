@@ -46,15 +46,15 @@ user_filter = [
 		User('kKNcw6OhBPRScH7Hsef8jDpCIiE3', 'mda10', datetime.datetime(2018, 3, 15, 13, 0,  0)),
 		
 		# AUTH users
-		User('PUfBB1yhJJSCx6OaaBFXmtLtkJ32', 'auth1',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('siD57H6QaQVmqb57hMT5jVHEo4Q2', 'auth2',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('R502LmAck2X9lXKaOsbJV4lfuuh1', 'auth3',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('igPH8ZdGj3ME1ZoYnLRT7s91BDj2', 'auth4',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('lDg0IeZLPjeKDGGc3o6YrBVy7I42', 'auth5',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('3sUIPYYLFmOhofvxYoxHctEiRm33', 'auth6',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('l1pZIRtcMMcFaPxaIOACmJcPWhg1', 'auth7',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('teSV3bsOaDQvkfunabo7NhncCjq1', 'auth8',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('BUgwE9grEVVlYDeZmwV2jRWFxcU2', 'auth9',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('JM0ZNcnNziSAOWnSIkCjxsJ29DF3', 'auth10', datetime.datetime(2018, 3, 1,  12, 0,  0)) # TODO: need setup date
+		User('PUfBB1yhJJSCx6OaaBFXmtLtkJ32', 'auth1',  datetime.datetime(2018, 4, 17, 0, 0,  0)),
+		User('siD57H6QaQVmqb57hMT5jVHEo4Q2', 'auth2',  datetime.datetime(2018, 4, 19, 0, 0,  0)),
+		User('R502LmAck2X9lXKaOsbJV4lfuuh1', 'auth3',  datetime.datetime(2018, 4, 20, 0, 0,  0)),
+		User('igPH8ZdGj3ME1ZoYnLRT7s91BDj2', 'auth4',  datetime.datetime(2018, 4, 26, 0, 0,  0)),
+		User('lDg0IeZLPjeKDGGc3o6YrBVy7I42', 'auth5',  datetime.datetime(2018, 4, 20, 0, 0,  0)),
+		User('3sUIPYYLFmOhofvxYoxHctEiRm33', 'auth6',  datetime.datetime(2018, 4, 22, 0, 0,  0)),
+		User('l1pZIRtcMMcFaPxaIOACmJcPWhg1', 'auth7',  datetime.datetime(2018, 4, 18, 0, 0,  0)),
+		User('teSV3bsOaDQvkfunabo7NhncCjq1', 'auth8',  datetime.datetime(2018, 4, 19, 0, 0,  0)),
+		User('BUgwE9grEVVlYDeZmwV2jRWFxcU2', 'auth9',  datetime.datetime(2018, 4, 25, 0, 0,  0)),
+		User('JM0ZNcnNziSAOWnSIkCjxsJ29DF3', 'auth10', datetime.datetime(2018, 4, 27, 0, 0,  0))
 		
 		]
