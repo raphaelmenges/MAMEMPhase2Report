@@ -54,7 +54,13 @@ class UserData():
 		self.domain_frequency = {} # dictionary storing domain and visit frequency
 		self.domain_activity = OrderedDict() # ordered dict of domain and dict about frequency, page_count,
 		# active_hours, char_input_count, click_count; further filled in _calc_page_acitivity_metrics
+		self.daily_use = {} # day: {start_count,
+		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count} };
+		# day encoded as d-m-Y string; further filled in _calc_start_metrics and _calc_page_acitivity_metrics
 		#########################################################################
+		
+		# List of all start and end dates
+		date_list = []
 		
 		# Fill starts
 		for key, start in self._data['general']['start'].items():
@@ -65,6 +71,9 @@ class UserData():
 				
 				# Store data about start
 				self.start_dates[key] = {'start': date, 'end': date}
+				
+				# Remember date
+				date_list.append(date)
 				
 		# Go over page activity data and search of "oldest" entries for each end
 		if 'pageActivity' in self._data:
@@ -95,11 +104,26 @@ class UserData():
 						else:
 							self.domain_frequency[domain] = 1
 							
+						# Remember end date
+						date_list.append(end_date)
+							
+		# Handle domain frequency
 		domain_frequency_list = sorted(self.domain_frequency.items(), key=operator.itemgetter(1))
 		domain_frequency_list.reverse()
 		
 		for domain, frequency in domain_frequency_list:
 			self.domain_activity[domain] = {'frequency' : frequency, 'active_hours' : 0.0, 'page_count' : 0, 'char_input_count' : 0, 'click_count' : 0}
+			
+		# Initialize daily use
+		date_list.sort()
+		for date in hlp.date_range(date_list[0], date_list[-1], True):
+			
+			day_string = hlp.from_date_to_day_string(date)
+			self.daily_use[day_string] = {'start_count': 0}
+						
+			# Create metrics for every social task (like general, facebook...)
+			for task in dfn.social_tasks.keys():
+				self.daily_use[day_string][task] = {'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
 			
 	# Go over general metrics
 	def _calc_general_metrics(self):
@@ -164,9 +188,6 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.start_count = 0
-		self.daily_use = {} # day: {start_count,
-		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count} };
-		# day encoded as d-m-Y string; further filled in _calc_page_acitivity_metrics
 		self.start_day_times = [] # triples of hour, minute and second
 		#########################################################################
 		
@@ -185,15 +206,8 @@ class UserData():
 					
 					# Update daily use
 					day_string = hlp.from_date_to_day_string(date)
-					if day_string in self.daily_use: # increment start count
-						self.daily_use[day_string]['start_count'] += 1
-					else: # create new date value entry
-						self.daily_use[day_string] = {'start_count': 1}
-						
-						# Create metrics for every social task (like general, facebook...)
-						for task in dfn.social_tasks.keys():
-							self.daily_use[day_string][task] = {'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
-						
+					self.daily_use[day_string]['start_count'] += 1
+					
 					# Update start day times
 					self.start_day_times.append((date.hour, date.minute, date.second))
 					
@@ -270,7 +284,7 @@ class UserData():
 						# Update total active hours
 						self.total_active_hours += active_hours 
 						
-						# Update daily use TODO: might break if there is somebody using the system across midnight. If it breaks, add inbetween days to daily_usage
+						# Update daily use
 						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
 						
 						### Daily use ###

@@ -257,19 +257,24 @@ def daily_use(user_data_list):
 	for idx, user in enumerate(user_data_list): # go over users
 		for day_string, use in user.daily_use.items(): # go over daily use of user
 			
-			# Gather coordinate
-			x = (hlp.from_day_string_to_date(day_string) - date_range[0]).days # dates since start of experiment used as index in x-axis
-			y = idx # just the user index
+			# Check whether there was actual use
+			start_count = use['start_count']
+			active_hours = use['general']['active_hours']
 			
-			# Render big dot
-			plot_data_x.append(x)
-			plot_data_y.append(y)
-			
-			# Start count
-			ax.annotate(str(use['start_count']), (x,y), ha="center", va="bottom", size=7, weight='bold')
-			
-			# Active hours
-			ax.annotate(format(use['general']['active_hours'], '.2f'), (x,y), ha="center", va="top", size=5)
+			if start_count > 0 or active_hours > 0:
+				# Gather coordinate
+				x = (hlp.from_day_string_to_date(day_string) - date_range[0]).days # dates since start of experiment used as index in x-axis
+				y = idx # just the user index
+				
+				# Render big dot
+				plot_data_x.append(x)
+				plot_data_y.append(y)
+				
+				# Start count
+				ax.annotate(str(start_count), (x,y), ha="center", va="bottom", size=7, weight='bold')
+				
+				# Active hours
+				ax.annotate(format(active_hours, '.2f'), (x,y), ha="center", va="top", size=5)
 	
 	# Grid
 	plt.rc('grid', linestyle='dashed', color='grey')
