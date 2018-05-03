@@ -30,8 +30,9 @@ user_filter = [
 		User('gZsrgnQLDodXkSrfwhZNNdN1bo73', 'sheba5',  datetime.datetime(2018, 3, 6,  18, 0,  0)),
 		User('xK99Udpta0R7sVHqzediybTJyk82', 'sheba6',  datetime.datetime(2018, 3, 25, 12, 30, 0)),
 		User('2kEYr9d57fZlIuqr24iUFkPgT1q2', 'sheba7',  datetime.datetime(2018, 3, 26, 13, 0,  0)),
-		User('4cUfumadS2bekRC6absIbm6r4EU2', 'sheba8',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
-		User('9RtuZr7hejbKhRzQ4ujYCWpgiV53', 'sheba9',  datetime.datetime(2018, 3, 1,  12, 0,  0)), # TODO: need setup date
+		User('4cUfumadS2bekRC6absIbm6r4EU2', 'sheba8',  datetime.datetime(2018, 4, 3,  12, 30, 0)),
+		User('9RtuZr7hejbKhRzQ4ujYCWpgiV53', 'sheba9',  datetime.datetime(2018, 4, 9,  14, 0,  0)),
+		User('k5qaRZ6HWeZRakZ48UP878TUQBU2', 'sheba10', datetime.datetime(2018, 4, 30, 13, 0,  0)),
 		
 		# MDA users
 		User('Et6iZrHVAEMX8cLFv3ZdkGCoDXO2', 'mda1',  datetime.datetime(2018, 3, 6,  11, 0,  0)),
