@@ -55,7 +55,7 @@ class UserData():
 		self.domain_activity = OrderedDict() # ordered dict of domain and dict about frequency, page_count,
 		# active_hours, char_input_count, click_count; further filled in _calc_page_acitivity_metrics
 		self.daily_use = {} # day: {start_count,
-		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count} };
+		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count, domains} };
 		# day encoded as d-m-Y string; further filled in _calc_start_metrics and _calc_page_acitivity_metrics
 		#########################################################################
 		
@@ -123,7 +123,7 @@ class UserData():
 						
 			# Create metrics for every social task (like general, facebook...)
 			for task in dfn.social_tasks.keys():
-				self.daily_use[day_string][task] = {'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0}
+				self.daily_use[day_string][task] = {'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0, 'domains': []}
 			
 	# Go over general metrics
 	def _calc_general_metrics(self):
@@ -308,7 +308,11 @@ class UserData():
 								
 								# Page count
 								self.daily_use[day_string][task]['page_count'] += session['pageCount']
-						
+								
+								# Domains
+								if domain not in self.daily_use[day_string][task]['domains']:
+									self.daily_use[day_string][task]['domains'].append(domain)
+									
 						#################
 						
 						### Domain activity ###

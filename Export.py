@@ -35,7 +35,7 @@ def daily_use_per_user(user_data_list):
 	for task in dfn.social_tasks.keys():
 		
 		# Do it for all metrics per task
-		task_metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'seconds_per_char', 'click_count']
+		task_metrics = ['active_hours', 'session_count', 'page_count', 'char_input_count', 'seconds_per_char', 'click_count', 'domain_count']
 		for metric in task_metrics:
 			
 			# Print progress
@@ -68,6 +68,8 @@ def daily_use_per_user(user_data_list):
 									metric_value_dict[day_string] = float(user_data.daily_use[day_string][task]['char_input_seconds']) / char_input_count
 								else:
 									metric_value_dict[day_string] = float('nan') # take fallback
+							elif metric == 'domain_count':
+								metric_value_dict[day_string] = len(user_data.daily_use[day_string][task]['domains'])
 							else:
 								# Other metric
 								metric_value_dict[day_string] = user_data.daily_use[day_string][task][metric]
