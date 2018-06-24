@@ -84,6 +84,8 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	print('.', end='')
 	plt.normalized_daily_use(user_data_list)
 	print('.', end='')
+	plt.accumulated_normalized_daily_use(user_data_list)
+	print('.', end='')
 	print('finished.')
 	
 	# Export

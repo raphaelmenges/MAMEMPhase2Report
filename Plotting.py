@@ -243,6 +243,7 @@ def normalized_daily_use(user_data_list):
 	# Go over days of active hours for each user
 	plot_data_x = []
 	plot_data_y = []
+	plot_data_color = []
 	for idx, user in enumerate(user_data_list): # go over users
 		for day_string, use in user.daily_use.items(): # go over daily use of user
 
@@ -251,32 +252,104 @@ def normalized_daily_use(user_data_list):
 			active_hours = use['general']['active_hours']
 
 			if start_count > 0 or active_hours > 0:
+				
 				# Gather coordinate
 				x = (hlp.from_day_string_to_date(day_string) - hlp.from_day_string_to_date(hlp.from_date_to_day_string(user._setup_date))).days # days since start of experiment used as index in x-axis
 				y = idx # just the user index
-
+				
+				# Decide on color
+				color = '#000000'
+				if 'sheba' in user.mid:
+					color = '#4ea7ff'
+				elif 'mda' in user.mid:
+					color = '#ffbb4e'
+				else:
+					color = '#ff634e'
+					
 				# Render big dot
 				plot_data_x.append(x)
 				plot_data_y.append(y)
+				plot_data_color.append(color)
 
 	# x-axis, displaying the date range
-	fig = plt.figure(figsize=(20, 8))
+	fig = plt.figure(figsize=(12, 8))
 	ax = plt.gca()
 	plt.xticks(range(max(plot_data_x)+1))
+	ax.set_xlim(-1, max(plot_data_x)+1)
 	
 	# y-axis, displaying the users
 	y = range(len(user_data_list))
 	plt.yticks(range(len(user_data_list)), [x.mid for x in user_data_list])
+	ax.set_ylim(-1, len(user_data_list))
 	
 	# Grid
-	plt.rc('grid', linestyle='dashed', color='grey')
+	plt.rc('grid', color='lightgrey')
 	ax.set_axisbelow(True)
 	plt.grid(True)
 	
 	# Plot it
 	plt.title('Normalized Daily Use')
-	plt.scatter(plot_data_x, plot_data_y, s=125, color='lightgreen')
-	fig.savefig(dfn.output_dir + 'normalized_daily_use' + dfn.plot_format, bbox_inches='tight')
+	plt.scatter(plot_data_x, plot_data_y, s=125, color=plot_data_color)
+	fig.savefig(dfn.output_dir + 'normalized_daily_use' + dfn.plot_format)
+	
+# Daily usage plot, starting for each user at the setup date, accumulated per cohort
+def accumulated_normalized_daily_use(user_data_list):
+    
+	# Go over days of active hours for each user
+	plot_data_x = []
+	plot_data_y = []
+	plot_data_color = []
+	for idx, user in enumerate(user_data_list): # go over users
+		for day_string, use in user.daily_use.items(): # go over daily use of user
+
+			# Check whether there was actual use
+			start_count = use['start_count']
+			active_hours = use['general']['active_hours']
+
+			if start_count > 0 or active_hours > 0:
+				
+				# Gather coordinate
+				x = (hlp.from_day_string_to_date(day_string) - hlp.from_day_string_to_date(hlp.from_date_to_day_string(user._setup_date))).days # days since start of experiment used as index in x-axis
+				y = -1
+				
+				# Decide on y and color
+				color = '#000000'
+				if 'sheba' in user.mid:
+					color = '#4ea7ff'
+					y = 0
+				elif 'mda' in user.mid:
+					color = '#ffbb4e'
+					y = 1
+				else:
+					color = '#ff634e'
+					y = 2
+					
+				# Render big dot
+				plot_data_x.append(x)
+				plot_data_y.append(y)
+				plot_data_color.append(color)
+
+	# x-axis, displaying the date range
+	fig = plt.figure(figsize=(12, 1))
+	ax = plt.gca()
+	plt.xticks(range(max(plot_data_x)+1))
+	ax.set_xlim(-1, max(plot_data_x)+1)
+	
+	# y-axis, displaying the cohorts
+	cohorts = ['SHEBA', 'MDA', 'AUTH']
+	y = range(len(cohorts))
+	plt.yticks(range(len(cohorts)), cohorts)
+	ax.set_ylim(-0.5, len(cohorts)-0.5)
+	
+	# Grid
+	plt.rc('grid', color='lightgrey')
+	ax.set_axisbelow(True)
+	plt.grid(True)
+	
+	# Plot it
+	plt.title('Accumulated Normalized Daily Use')
+	plt.scatter(plot_data_x, plot_data_y, s=125, color=plot_data_color)
+	fig.savefig(dfn.output_dir + 'accumulated_normalized_daily_use' + dfn.plot_format)
 	
 # Daily usage plot
 def daily_use(user_data_list):
@@ -304,6 +377,7 @@ def daily_use(user_data_list):
 			active_hours = use['general']['active_hours']
 			
 			if start_count > 0 or active_hours > 0:
+				
 				# Gather coordinate
 				x = (hlp.from_day_string_to_date(day_string) - date_range[0]).days # dates since start of experiment used as index in x-axis
 				y = idx # just the user index
