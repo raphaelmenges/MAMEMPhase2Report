@@ -339,7 +339,7 @@ def accumulated_normalized_daily_use(user_data_list):
 				plot_data_color.append(color)
 
 	# x-axis, displaying the date range
-	fig = plt.figure(figsize=(13, 1))
+	fig = plt.figure(figsize=(13, 2))
 	ax = plt.gca()
 	plt.xticks(range(max(plot_data_x)+1))
 	ax.set_xlim(-1, max(plot_data_x)+1)
