@@ -147,14 +147,18 @@ def run_time_after_each_start(user_data_list):
 			plot_data_x.append(hours) # run time hours
 			plot_data_y.append(idx) # just the user index
 			
+	
+	
+	# Plot it
+	plt.title('Run Times After Start in Hours')
+	plt.scatter(plot_data_x,plot_data_y,s=25, color='lightgreen')
+	
 	# Grid
 	plt.rc('grid', linestyle='dashed', color='grey')
 	ax.set_axisbelow(True)
 	plt.grid(True)
 	
-	# Plot it
-	plt.title('Run Times After Start in Hours')
-	plt.scatter(plot_data_x,plot_data_y,s=25, color='lightgreen')
+	# Save figure
 	fig.savefig(dfn.output_dir + 'run_times_after_each_start' + dfn.plot_format, bbox_inches='tight')
 	
 # Scatter plot about active time after each start
@@ -181,14 +185,17 @@ def active_hours_after_each_start(user_data_list):
 			plot_data_x.append(hours) # active hours
 			plot_data_y.append(idx) # just the user index
 			
+	
+	# Plot it
+	plt.title('Active Hours after Start')
+	plt.scatter(plot_data_x,plot_data_y,s=25, color='lightgreen')
+	
 	# Grid
 	plt.rc('grid', linestyle='dashed', color='grey')
 	ax.set_axisbelow(True)
 	plt.grid(True)
 	
-	# Plot it
-	plt.title('Active Hours after Start')
-	plt.scatter(plot_data_x,plot_data_y,s=25, color='lightgreen')
+	# Save figure
 	fig.savefig(dfn.output_dir + 'active_hours_after_each_start' + dfn.plot_format, bbox_inches='tight')
 
 # Plot general metrics counts across users as bar chart
@@ -272,7 +279,7 @@ def normalized_daily_use(user_data_list):
 				plot_data_color.append(color)
 
 	# x-axis, displaying the date range
-	fig = plt.figure(figsize=(12, 8))
+	fig = plt.figure(figsize=(13, 8))
 	ax = plt.gca()
 	plt.xticks(range(max(plot_data_x)+1))
 	ax.set_xlim(-1, max(plot_data_x)+1)
@@ -282,14 +289,16 @@ def normalized_daily_use(user_data_list):
 	plt.yticks(range(len(user_data_list)), [x.mid for x in user_data_list])
 	ax.set_ylim(-1, len(user_data_list))
 	
-	# Grid
-	plt.rc('grid', color='lightgrey')
-	ax.set_axisbelow(True)
-	plt.grid(True)
-	
 	# Plot it
 	plt.title('Normalized Daily Use')
 	plt.scatter(plot_data_x, plot_data_y, s=125, color=plot_data_color)
+	
+	# Grid
+	plt.rc('grid', linestyle="-", color='lightgrey')
+	ax.set_axisbelow(True)
+	plt.grid(True)
+	
+	# Save figure
 	fig.savefig(dfn.output_dir + 'normalized_daily_use' + dfn.plot_format)
 	
 # Daily usage plot, starting for each user at the setup date, accumulated per cohort
@@ -330,7 +339,7 @@ def accumulated_normalized_daily_use(user_data_list):
 				plot_data_color.append(color)
 
 	# x-axis, displaying the date range
-	fig = plt.figure(figsize=(12, 1))
+	fig = plt.figure(figsize=(13, 1))
 	ax = plt.gca()
 	plt.xticks(range(max(plot_data_x)+1))
 	ax.set_xlim(-1, max(plot_data_x)+1)
@@ -341,14 +350,16 @@ def accumulated_normalized_daily_use(user_data_list):
 	plt.yticks(range(len(cohorts)), cohorts)
 	ax.set_ylim(-0.5, len(cohorts)-0.5)
 	
-	# Grid
-	plt.rc('grid', color='lightgrey')
-	ax.set_axisbelow(True)
-	plt.grid(True)
-	
 	# Plot it
 	plt.title('Accumulated Normalized Daily Use')
 	plt.scatter(plot_data_x, plot_data_y, s=125, color=plot_data_color)
+	
+	# Grid
+	plt.rc('grid', linestyle="-", color='lightgrey')
+	ax.set_axisbelow(True)
+	plt.grid(True)
+	
+	# Save figure
 	fig.savefig(dfn.output_dir + 'accumulated_normalized_daily_use' + dfn.plot_format)
 	
 # Daily usage plot
@@ -392,12 +403,14 @@ def daily_use(user_data_list):
 				# Active hours
 				ax.annotate(format(active_hours, '.2f'), (x,y), ha="center", va="top", size=5)
 	
+	# Plot it
+	plt.title('Daily Use - Start Count (bold) and Active Hours (in Web)')
+	plt.scatter(plot_data_x, plot_data_y, s=175, color='lightgreen')
+	
 	# Grid
 	plt.rc('grid', linestyle='dashed', color='grey')
 	ax.set_axisbelow(True)
 	plt.grid(True)
 	
-	# Plot it
-	plt.title('Daily Use - Start Count (bold) and Active Hours (in Web)')
-	plt.scatter(plot_data_x, plot_data_y, s=175, color='lightgreen')
+	# Save figure
 	fig.savefig(dfn.output_dir + 'daily_use' + dfn.plot_format, bbox_inches='tight')
