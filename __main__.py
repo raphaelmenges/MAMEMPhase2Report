@@ -53,6 +53,8 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 		print('.', end='')
 	print('finished.')
 	
+	'''
+	
 	### Most Popular Domains
 	domain_frequency = Counter({})
 	for user_data in user_data_list:
@@ -95,3 +97,4 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	ex.daily_use_per_user(user_data_list)
 	print('.', end='')
 	print('finished.')
+	'''

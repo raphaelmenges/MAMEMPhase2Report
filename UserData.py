@@ -42,6 +42,11 @@ class UserData():
 		rp.print_line("Start Count: ", self.start_count)
 		rp.print_line("Latest Start: ", latest_start)
 		rp.print_line("Total Active Hours (in Web): ", self.total_active_hours)
+		rp.print_line("Total Active Hours (in Web with Drift Map): ", self.total_active_hours_drift_map)
+		active_hours_drift_map_percentage = 0.0
+		if self.total_active_hours > 0:
+			active_hours_drift_map_percentage = self.total_active_hours_drift_map / self.total_active_hours
+		rp.print_line("Active Hours with Drift Map in Percentage (in Web): ", active_hours_drift_map_percentage)
 		rp.print_line("Bookmarks Adding Count: ", self.bookmark_adding_count)
 	
 	### Calculations ###
@@ -256,6 +261,7 @@ class UserData():
 		
 		### Metrics #############################################################
 		self.total_active_hours = 0.0
+		self.total_active_hours_drift_map = 0.0
 		self.total_run_time_hours = 0.0 # total run time in hours without training
 		self.run_time_hours_per_start = [0.0] * self._get_data(Keys.start_count) # taking here the count of starts in database, including pre-setup. Those will have run-time of zero
 		self.active_hours_per_start = [0.0] * self._get_data(Keys.start_count) # similar as for run time
@@ -282,7 +288,11 @@ class UserData():
 						active_hours = session['durationUserActive'] / (60.0 * 60.0) # from seconds to hours
 						
 						# Update total active hours
-						self.total_active_hours += active_hours 
+						self.total_active_hours += active_hours
+						
+						# Update total active ours with drift map
+						if self._data['general']['start'][str(session['startIndex'])]['useDriftMap']:
+							self.total_active_hours_drift_map += active_hours
 						
 						# Update daily use
 						day_string = hlp.from_date_to_day_string(hlp.from_date_string_to_date(session['startDate']))
