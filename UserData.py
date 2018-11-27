@@ -49,6 +49,12 @@ class UserData():
 		rp.print_line("Active Hours with Drift Map in Percentage (in Web): ", active_hours_drift_map_percentage)
 		rp.print_line("Bookmarks Adding Count: ", self.bookmark_adding_count)
 	
+		click_sum = 0
+		for day, value in self.daily_use.items():
+			click_sum += value['general']['click_count']
+		rp.print_line("Click Count: ", click_sum)
+		
+	
 	### Calculations ###
 	
 	# Calculate required metrics
