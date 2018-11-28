@@ -2,6 +2,7 @@ import Keys
 import Helpers as hlp
 import Report as rp
 import Defines as dfn
+import math
 from functools import reduce
 from collections import OrderedDict
 import operator
@@ -38,6 +39,7 @@ class UserData():
 		# Do written report
 		rp.print_line("MAMEM id: ", self.mid)
 		rp.print_line("Nickname: ", self.nickname)
+		'''
 		rp.print_line("Setup Date: ", self._setup_date)
 		rp.print_line("Start Count: ", self.start_count)
 		rp.print_line("Latest Start: ", latest_start)
@@ -48,12 +50,36 @@ class UserData():
 			active_hours_drift_map_percentage = self.total_active_hours_drift_map / self.total_active_hours
 		rp.print_line("Active Hours with Drift Map in Percentage (in Web): ", active_hours_drift_map_percentage)
 		rp.print_line("Bookmarks Adding Count: ", self.bookmark_adding_count)
+		'''
 	
+		# Report about number of clicks
 		click_sum = 0
 		for day, value in self.daily_use.items():
 			click_sum += value['general']['click_count']
 		rp.print_line("Click Count: ", click_sum)
-		
+			
+		# Report about: how many tries per attempt have been necessary to click something specific
+		agg_click_tries = 0
+		click_attempts_count = 0
+		agg_click_tries_drift_map = 0
+		click_attempts_count_drift_map = 0
+		for day, value in self.daily_use.items():
+			
+			for click_attempts in value['general']['clicks_per_attempt']:
+				for click_try in click_attempts:
+					agg_click_tries += click_try # count of tries per attempt
+				click_attempts_count += len(click_attempts) # count of attempts
+				
+			for click_attempts in value['general']['clicks_per_attempt_drift_map']:
+				for click_try in click_attempts:
+					agg_click_tries_drift_map += click_try # count of tries per attempt
+				click_attempts_count_drift_map += len(click_attempts) # count of attempts
+				
+		if click_attempts_count > 0:
+			rp.print_line("Average Tries per Click Attempt: ", agg_click_tries / click_attempts_count)
+			
+		if click_attempts_count_drift_map > 0:
+			rp.print_line("Average Tries per Click Attempt With Drift Map: ", agg_click_tries_drift_map / click_attempts_count_drift_map)
 	
 	### Calculations ###
 	
@@ -134,7 +160,16 @@ class UserData():
 						
 			# Create metrics for every social task (like general, facebook...)
 			for task in dfn.social_tasks.keys():
-				self.daily_use[day_string][task] = {'active_hours': 0.0, 'session_count': 0, 'page_count': 0, 'char_input_count': 0, 'char_input_seconds': 0.0, 'click_count': 0, 'domains': []}
+				self.daily_use[day_string][task] = {
+						'active_hours': 0.0,
+						'session_count': 0,
+						'page_count': 0,
+						'char_input_count': 0,
+						'char_input_seconds': 0.0,
+						'click_count': 0,
+						'clicks_per_attempt': [],
+						'clicks_per_attempt_drift_map': [],
+						'domains': []}
 			
 	# Go over general metrics
 	def _calc_general_metrics(self):
@@ -297,7 +332,9 @@ class UserData():
 						self.total_active_hours += active_hours
 						
 						# Update total active ours with drift map
-						if self._data['general']['start'][str(session['startIndex'])]['useDriftMap']:
+						drift_map_active = self._data['general']['start'][str(session['startIndex'])]['useDriftMap']
+						print(drift_map_active)
+						if drift_map_active:
 							self.total_active_hours_drift_map += active_hours
 						
 						# Update daily use
@@ -381,6 +418,39 @@ class UserData():
 									
 									# Check for clicks
 									if 'clicks' in page:
+										
+										# Euclidean distance
+										def distance(p0, p1):
+											return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
+										
+										# Collect click coordinates on page
+										coords = []
+										for click in page['clicks']:
+											coord = click['coord'].split(',')
+											coords.append([float(coord[0]), float(coord[1])])
+										
+										# Count how many tries have been used to attempt a click
+										click_tries = []
+										curr_click_try = 1
+										last_coord = []
+										for i in range(len(coords)):
+											if i > 0:
+												dist = distance(coords[i], last_coord)
+												if dist == 0:
+													curr_click_try += 0 # ignore if distance is zero
+												elif dist < 50:
+													curr_click_try += 1
+												else:
+													click_tries.append(curr_click_try)
+													curr_click_try = 1
+											last_coord = coords[i]
+										click_tries.append(curr_click_try)
+
+										# Clicks
+										if drift_map_active: # drift map
+											self.daily_use[day_string][task]['clicks_per_attempt_drift_map'].append(click_tries)
+										else: # no drift map
+											self.daily_use[day_string][task]['clicks_per_attempt'].append(click_tries)
 										
 										# Go over click entries
 										for click in page['clicks']:
