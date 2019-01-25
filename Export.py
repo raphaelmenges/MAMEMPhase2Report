@@ -2,6 +2,46 @@ import Defines as dfn
 import Helpers as hlp
 from collections import OrderedDict
 import csv
+from collections import Counter
+import operator
+
+# Export information about domains
+def domain_infos(user_data_list):
+	
+	# Sort domains by frequencies
+	domain_frequency = Counter({})
+	for user_data in user_data_list:
+		domain_frequency = domain_frequency + Counter(user_data.domain_frequency)
+	domain_frequency_list = sorted(domain_frequency.items(), key=operator.itemgetter(1))
+	domain_frequency_list.reverse()
+	
+	# Collect information for each domain
+	domain_activity = OrderedDict()
+	
+	# Go over sorted domains
+	for item in domain_frequency_list:
+		domain = item[0] # get domain name
+		
+		# Go over domains as stored per user
+		for user_data in user_data_list:
+			for key, value in user_data.domain_activity.items():
+				
+				# Check whether it is sorted domain
+				if(key == domain):
+					if domain in domain_activity:
+						domain_activity[domain]['frequency'] += value['frequency']
+						domain_activity[domain]['page_count'] += value['page_count']
+						domain_activity[domain]['active_hours'] += value['active_hours']
+					else:
+						domain_activity[domain] = {'frequency': value['frequency'], 'page_count': value['page_count'], 'active_hours': value['active_hours'] }
+	# Print to CSV
+	with open(dfn.output_dir + 'domains.csv', 'w', newline='') as csvfile:
+		output = csv.DictWriter(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL, fieldnames=['domain', 'visits', 'page_count', 'active_hours'])
+		output.writeheader()
+		
+		for domain, info in domain_activity.items():
+			output.writerow({'domain': domain, 'visits': info['frequency'], 'page_count': info['page_count'], 'active_hours': info['active_hours']})
+			
 
 # Export accumulated data per user
 def accumulated_data_per_user(user_data_list):
