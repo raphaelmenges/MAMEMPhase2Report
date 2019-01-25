@@ -3,6 +3,14 @@ import Defines as dfn
 import matplotlib.pyplot as plt
 import numpy as np
 
+from matplotlib import rcParams
+rcParams['font.family'] = 'sans-serif'
+rcParams['font.sans-serif'] = ['Linux Biolinum']
+rcParams['font.serif'] = ['Linux Biolinum']
+rcParams["font.size"] = "10"
+rcParams['text.usetex'] ='false'
+
+
 # Life times of calibrations in hours as scatter plot
 def calibration_life_times(user_data_list):
 	
@@ -99,12 +107,12 @@ def youtube_hours(user_data_list):
 	plt.grid(True, axis='y')
 	plt.xticks(range(len(ids)), ids, rotation=45)
 	plt.title('YouTube Hours')
-	bar_hours = plt.bar(range(len(ids)), hours, 0.5, color="black")
-	bar_foregound = plt.bar(range(len(ids)), foreground_hours, 0.5, color="darkgreen")
-	bar_active = plt.bar(range(len(ids)), active_hours, 0.5, color="lightgreen")
+	bar_hours = plt.bar(range(len(ids)), hours, 0.5, color="#0B3875")
+	bar_foregound = plt.bar(range(len(ids)), foreground_hours, 0.5, color="#d44131")
+	bar_active = plt.bar(range(len(ids)), active_hours, 0.5, color="#ffbb4e")
 	ax.legend((bar_hours[0], bar_foregound[0], bar_active[0]), ('Total', 'Foreground', 'Active'))
 	fig.savefig(dfn.output_dir + 'youtube_hours' + dfn.plot_format, bbox_inches='tight')
-
+	
 # Bar chart showing day time of starts
 def start_day_times(user_data_list):
 	
@@ -120,7 +128,7 @@ def start_day_times(user_data_list):
 	ax.set_axisbelow(True)
 	plt.grid(True)
 	plt.title('Day Times of Starts')
-	plt.bar(range(24), bins, 0.5, color="lightgreen")
+	plt.bar(range(24), bins, 0.5, color="#d44131")
 	fig.savefig(dfn.output_dir + 'start_day_times' + dfn.plot_format, bbox_inches='tight')
 
 # Scatter plot about run times after each start
@@ -204,32 +212,33 @@ def general_metrics_counts(user_data_list):
 	# Collect data
 	ids = []
 	counts = {
-			'bookmarkAdding': ['bookmark_adding_count', 'Bookmark Adding Count', []],
-			'bookmarkUsage': ['bookmark_usage_count', 'Bookmark Usage Count', []],
-			'goBackUsage': ['go_back_usage_count', 'Go Back Usage Count', []],
-			'goForwardUsage': ['go_forward_usage_count', 'Go Forward Usage Count', []],
-			'historyUsage': ['history_usage_count', 'Histroy Usage Count', []],
+			'bookmarkAdding': ['bookmark_adding_count', 'Bookmark Add Count', []],
+			'bookmarkUsage': ['bookmark_usage_count', 'Bookmark Use Count', []],
+			'goBackUsage': ['go_back_usage_count', 'Back Navigation Count', []],
+			# 'goForwardUsage': ['go_forward_usage_count', 'Go Forward Usage Count', []],
+			'historyUsage': ['history_usage_count', 'Histroy Use Count', []],
 			'pause': ['pause_count', 'Pause Count', []],
-			'tabClosing': ['tab_closing_count', 'Tab Closing Count', []],
-			'tabCreation': ['tab_creation_count', 'Tab Creation Count', []],
-			'tabReloading': ['tab_reloading_count', 'Tab Reloading Count', []],
-			'tabSwitching': ['tab_switching_count', 'Tab Switching Count', []],
-			'unpause': ['unpause_count', 'Unpause Count', []],
-			'urlInput': ['url_input_count', 'URL Input Count', []]}
+			# 'tabClosing': ['tab_closing_count', 'Tab Closing Count', []],
+			# 'tabCreation': ['tab_creation_count', 'Tab Creation Count', []],
+			# 'tabReloading': ['tab_reloading_count', 'Tab Reloading Count', []],
+			'tabSwitching': ['tab_switching_count', 'Tab Switch Count', []],
+			# 'unpause': ['unpause_count', 'Unpause Count', []],
+			# 'urlInput': ['url_input_count', 'URL Input Count', []]
+			}
 	for user_data in user_data_list:
 		ids.append(user_data.mid)
 		counts['bookmarkAdding'][2].append(user_data.bookmark_adding_count)
 		counts['bookmarkUsage'][2].append(user_data.bookmark_usage_count)
 		counts['goBackUsage'][2].append(user_data.go_back_usage_count)
-		counts['goForwardUsage'][2].append(user_data.go_forward_usage_count)
+		# counts['goForwardUsage'][2].append(user_data.go_forward_usage_count)
 		counts['historyUsage'][2].append(user_data.history_usage_count)
 		counts['pause'][2].append(user_data.pause_count)
-		counts['tabClosing'][2].append(user_data.tab_closing_count)
-		counts['tabCreation'][2].append(user_data.tab_creation_count)
-		counts['tabReloading'][2].append(user_data.tab_reloading_count)
+		# counts['tabClosing'][2].append(user_data.tab_closing_count)
+		# counts['tabCreation'][2].append(user_data.tab_creation_count)
+		# counts['tabReloading'][2].append(user_data.tab_reloading_count)
 		counts['tabSwitching'][2].append(user_data.tab_switching_count)
-		counts['unpause'][2].append(user_data.unpause_count)
-		counts['urlInput'][2].append(user_data.url_input_count)
+		# counts['unpause'][2].append(user_data.unpause_count)
+		# counts['urlInput'][2].append(user_data.url_input_count)
 	
 	# Plot all global metrics
 	for key, item in counts.items():
@@ -238,8 +247,8 @@ def general_metrics_counts(user_data_list):
 		ax.set_axisbelow(True)
 		plt.grid(True)
 		plt.xticks(range(len(ids)), ids, rotation=45)
-		plt.title('Global Metrics: ' + item[1])
-		plt.bar(range(len(ids)), item[2], 0.5, color="lightgreen")
+		plt.title(item[1])
+		plt.bar(range(len(ids)), item[2], 0.5, color="#d44131")
 		fig.savefig(dfn.output_dir + item[0] + dfn.plot_format, bbox_inches='tight')
 		print('.', end='')
         
@@ -267,12 +276,12 @@ def normalized_daily_use(user_data_list):
 				# Decide on color
 				color = '#000000'
 				if 'sheba' in user.mid:
-					color = '#4ea7ff'
+					color = '#0B3875'
 				elif 'mda' in user.mid:
-					color = '#ffbb4e'
+					color = '#d44131'
 				else:
-					color = '#ff634e'
-					
+					color = '#ffbb4e'
+				
 				# Render big dot
 				plot_data_x.append(x)
 				plot_data_y.append(y)
@@ -290,7 +299,7 @@ def normalized_daily_use(user_data_list):
 	ax.set_ylim(-1, len(user_data_list))
 	
 	# Plot it
-	plt.title('Normalized Daily Use')
+	plt.title('Daily Use')
 	plt.scatter(plot_data_x, plot_data_y, s=125, color=plot_data_color)
 	
 	# Grid
@@ -324,13 +333,13 @@ def accumulated_normalized_daily_use(user_data_list):
 				# Decide on y and color
 				color = '#000000'
 				if 'sheba' in user.mid:
-					color = '#4ea7ff'
+					color = '#FFAD00'
 					y = 0
 				elif 'mda' in user.mid:
-					color = '#ffbb4e'
+					color = '#0B3875'
 					y = 1
 				else:
-					color = '#ff634e'
+					color = '#d44131'
 					y = 2
 					
 				# Render big dot

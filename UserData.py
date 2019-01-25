@@ -6,6 +6,7 @@ import math
 from functools import reduce
 from collections import OrderedDict
 import operator
+import datetime
 
 class UserData():
 
@@ -206,7 +207,7 @@ class UserData():
 						if key != 'count': # there is always one count entry that we ignore
 							
 							# Barrier to ignore before-setup data
-							if self._after_setup(entry['date']):
+							if self._check_data(entry['date']):
 								
 								# Update count
 								general_metrics[idx][1] += 1
@@ -242,7 +243,7 @@ class UserData():
 			if key != 'count': # there is always one count entry that we ignore
 				
 				# Barrier to ignore before-setup data
-				if self._after_setup(start['date']):
+				if self._check_data(start['date']):
 					
 					# Helpers
 					date = hlp.from_date_string_to_date(start['date'])
@@ -273,7 +274,7 @@ class UserData():
 			if key != 'count': # there is always one count entry that we ignore
 				
 				# Barrier to ignore before-setup data
-				if self._after_setup(calibration['date']):
+				if self._check_data(calibration['date']):
 					
 					# TODO: count active time with calibration
 					
@@ -320,7 +321,7 @@ class UserData():
 				for session in sessions['sessions']:
 					
 					# Barrier to ignore empty data point and before-setup data
-					if (session is not None) and (self._after_setup(session['startDate'])):
+					if (session is not None) and (self._check_data(session['startDate'])):
 						
 						# Extract domain
 						domain = session['domain']
@@ -333,7 +334,6 @@ class UserData():
 						
 						# Update total active ours with drift map
 						drift_map_active = self._data['general']['start'][str(session['startIndex'])]['useDriftMap']
-						print(drift_map_active)
 						if drift_map_active:
 							self.total_active_hours_drift_map += active_hours
 						
@@ -505,9 +505,11 @@ class UserData():
 			if not domain_is_social_task:
 				self.domain_activity_non_social_task[domain] = activity
 	
-	# Check whether date was after setup
-	def _after_setup(self, date_string):
-		return hlp.from_date_string_to_date(date_string) >= self._setup_date
+	# Check whether date was after setup and before end of considered trial time
+	def _check_data(self, date_string):
+		after_setup = hlp.from_date_string_to_date(date_string) >= self._setup_date
+		before_end = hlp.from_date_string_to_date(date_string) <= self._setup_date + datetime.timedelta(days=30)
+		return after_setup and before_end
 	
 	# Get data by key path into nested dict structure. Accepts additional custom keys
 	def _get_data(self, key_path, *args):
