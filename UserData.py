@@ -133,14 +133,15 @@ class UserData():
 						if end_date > self.start_dates[str(start_index)]['end']:
 							self.start_dates[str(start_index)]['end'] = end_date
 							
-						# Extract domain
-						domain = session['domain']
+						# Extract domain if date is within range
+						if self._check_data(session['startDate']):
+							domain = session['domain']
 							
-						# Update domain frequency
-						if domain in self.domain_frequency:
-							self.domain_frequency[domain] += 1
-						else:
-							self.domain_frequency[domain] = 1
+							# Update domain frequency
+							if domain in self.domain_frequency:
+								self.domain_frequency[domain] += 1
+							else:
+								self.domain_frequency[domain] = 1
 							
 						# Remember end date
 						date_list.append(end_date)
@@ -332,7 +333,7 @@ class UserData():
 						# Update total active hours
 						self.total_active_hours += active_hours
 						
-						# Update total active ours with drift map
+						# Update total active hours with drift map
 						drift_map_active = self._data['general']['start'][str(session['startIndex'])]['useDriftMap']
 						if drift_map_active:
 							self.total_active_hours_drift_map += active_hours
