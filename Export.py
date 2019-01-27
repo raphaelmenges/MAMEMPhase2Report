@@ -32,15 +32,16 @@ def domain_infos(user_data_list):
 						domain_activity[domain]['frequency'] += value['frequency']
 						domain_activity[domain]['page_count'] += value['page_count']
 						domain_activity[domain]['active_hours'] += value['active_hours']
+						domain_activity[domain]['stay_count'] += value['stay_count']
 					else:
-						domain_activity[domain] = {'frequency': value['frequency'], 'page_count': value['page_count'], 'active_hours': value['active_hours'] }
+						domain_activity[domain] = {'frequency': value['frequency'], 'page_count': value['page_count'], 'active_hours': value['active_hours'], 'stay_count': value['stay_count'] }
 	# Print to CSV
 	with open(dfn.output_dir + 'domains.csv', 'w', newline='') as csvfile:
-		output = csv.DictWriter(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL, fieldnames=['domain', 'visits', 'page_count', 'active_hours'])
+		output = csv.DictWriter(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL, fieldnames=['domain', 'visits', 'page_count', 'active_hours', 'stay_count'])
 		output.writeheader()
 		
 		for domain, info in domain_activity.items():
-			output.writerow({'domain': domain, 'visits': info['frequency'], 'page_count': info['page_count'], 'active_hours': info['active_hours']})
+			output.writerow({'domain': domain, 'visits': info['frequency'], 'page_count': info['page_count'], 'active_hours': info['active_hours'], 'stay_count': info['stay_count']})
 			
 
 # Export accumulated data per user

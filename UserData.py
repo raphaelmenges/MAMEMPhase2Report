@@ -91,7 +91,7 @@ class UserData():
 		self.start_dates = {} # key is start index, value is dict of start date and end date
 		self.domain_frequency = {} # dictionary storing domain and visit frequency
 		self.domain_activity = OrderedDict() # ordered dict of domain and dict about frequency, page_count,
-		# active_hours, char_input_count, click_count; further filled in _calc_page_acitivity_metrics
+		# active_hours, char_input_count, click_count, stay_count, further filled in _calc_page_acitivity_metrics
 		self.daily_use = {} # day: {start_count,
 		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count, domains} };
 		# day encoded as d-m-Y string; further filled in _calc_start_metrics and _calc_page_acitivity_metrics
@@ -134,7 +134,7 @@ class UserData():
 							self.start_dates[str(start_index)]['end'] = end_date
 							
 						# Extract domain if date is within range
-						if self._check_data(session['startDate']):
+						if self._check_date(session['startDate']):
 							domain = session['domain']
 							
 							# Update domain frequency
@@ -151,7 +151,7 @@ class UserData():
 		domain_frequency_list.reverse()
 		
 		for domain, frequency in domain_frequency_list:
-			self.domain_activity[domain] = {'frequency' : frequency, 'active_hours' : 0.0, 'page_count' : 0, 'char_input_count' : 0, 'click_count' : 0}
+			self.domain_activity[domain] = {'frequency' : frequency, 'active_hours' : 0.0, 'page_count' : 0, 'char_input_count' : 0, 'click_count' : 0, 'stay_count' : 0}
 			
 		# Initialize daily use
 		date_list.sort()
@@ -208,7 +208,7 @@ class UserData():
 						if key != 'count': # there is always one count entry that we ignore
 							
 							# Barrier to ignore before-setup data
-							if self._check_data(entry['date']):
+							if self._check_date(entry['date']):
 								
 								# Update count
 								general_metrics[idx][1] += 1
@@ -244,7 +244,7 @@ class UserData():
 			if key != 'count': # there is always one count entry that we ignore
 				
 				# Barrier to ignore before-setup data
-				if self._check_data(start['date']):
+				if self._check_date(start['date']):
 					
 					# Helpers
 					date = hlp.from_date_string_to_date(start['date'])
@@ -275,7 +275,7 @@ class UserData():
 			if key != 'count': # there is always one count entry that we ignore
 				
 				# Barrier to ignore before-setup data
-				if self._check_data(calibration['date']):
+				if self._check_date(calibration['date']):
 					
 					# TODO: count active time with calibration
 					
@@ -322,7 +322,7 @@ class UserData():
 				for session in sessions['sessions']:
 					
 					# Barrier to ignore empty data point and before-setup data
-					if (session is not None) and (self._check_data(session['startDate'])):
+					if (session is not None) and (self._check_date(session['startDate'])):
 						
 						# Extract domain
 						domain = session['domain']
@@ -374,6 +374,9 @@ class UserData():
 						self.domain_activity[domain]['active_hours'] += active_hours
 						
 						self.domain_activity[domain]['page_count'] += session['pageCount']
+						
+						if active_hours > 1/60.0:
+							self.domain_activity[domain]['stay_count'] += 1
 						
 						#######################
 							
@@ -507,7 +510,7 @@ class UserData():
 				self.domain_activity_non_social_task[domain] = activity
 	
 	# Check whether date was after setup and before end of considered trial time
-	def _check_data(self, date_string):
+	def _check_date(self, date_string):
 		after_setup = hlp.from_date_string_to_date(date_string) >= self._setup_date
 		before_end = hlp.from_date_string_to_date(date_string) <= self._setup_date + datetime.timedelta(days=30)
 		return after_setup and before_end

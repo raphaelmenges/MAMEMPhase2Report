@@ -288,9 +288,9 @@ def normalized_daily_use(user_data_list):
 				plot_data_color.append(color)
 
 	# x-axis, displaying the date range
-	fig = plt.figure(figsize=(13, 8))
+	fig = plt.figure(figsize=(7, 6))
 	ax = plt.gca()
-	plt.xticks(range(max(plot_data_x)+1))
+	plt.xticks(range(max(plot_data_x)+1), [x + 1 for x in range(max(plot_data_x)+1)]) # ticks and their labels
 	ax.set_xlim(-1, max(plot_data_x)+1)
 	
 	# y-axis, displaying the users
@@ -299,8 +299,8 @@ def normalized_daily_use(user_data_list):
 	ax.set_ylim(-1, len(user_data_list))
 	
 	# Plot it
-	plt.title('Daily Use')
-	plt.scatter(plot_data_x, plot_data_y, s=125, color=plot_data_color)
+	# plt.title('Daily Use')
+	plt.scatter(plot_data_x, plot_data_y, s=100, color=plot_data_color)
 	
 	# Grid
 	plt.rc('grid', linestyle="-", color='lightgrey')
