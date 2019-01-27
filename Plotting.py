@@ -308,6 +308,7 @@ def normalized_daily_use(user_data_list):
 	plt.grid(True)
 	
 	# Save figure
+	fig.tight_layout()
 	fig.savefig(dfn.output_dir + 'normalized_daily_use' + dfn.plot_format)
 	
 # Daily usage plot, starting for each user at the setup date, accumulated per cohort
