@@ -275,9 +275,9 @@ def normalized_daily_use(user_data_list):
 				
 				# Decide on color
 				color = '#000000'
-				if 'sheba' in user.mid:
+				if 'SHEBA' in user.mid:
 					color = '#0B3875'
-				elif 'mda' in user.mid:
+				elif 'MDA' in user.mid:
 					color = '#d44131'
 				else:
 					color = '#ffbb4e'
@@ -333,10 +333,10 @@ def accumulated_normalized_daily_use(user_data_list):
 				
 				# Decide on y and color
 				color = '#000000'
-				if 'sheba' in user.mid:
+				if 'SHEBA' in user.mid:
 					color = '#FFAD00'
 					y = 0
-				elif 'mda' in user.mid:
+				elif 'MDA' in user.mid:
 					color = '#0B3875'
 					y = 1
 				else:
