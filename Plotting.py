@@ -196,8 +196,6 @@ def run_time_after_each_start(user_data_list):
 			# Attach
 			plot_data_x.append(hours) # run time hours
 			plot_data_y.append(idx) # just the user index
-			
-	
 	
 	# Plot it
 	plt.title('Run Times After Start in Hours')
@@ -318,11 +316,11 @@ def normalized_daily_use(user_data_list):
 				# Decide on color
 				color = '#000000'
 				if 'SHEBA' in user.mid:
-					color = '#0B3875'
-				elif 'MDA' in user.mid:
-					color = '#d44131'
-				else:
 					color = '#ffbb4e'
+				elif 'MDA' in user.mid:
+					color = '#0B3875'
+				else:
+					color = '#d44131'
 				
 				# Render big dot
 				plot_data_x.append(x)
@@ -376,7 +374,7 @@ def accumulated_normalized_daily_use(user_data_list):
 				# Decide on y and color
 				color = '#000000'
 				if 'SHEBA' in user.mid:
-					color = '#FFAD00'
+					color = '#ffbb4e'
 					y = 0
 				elif 'MDA' in user.mid:
 					color = '#0B3875'
