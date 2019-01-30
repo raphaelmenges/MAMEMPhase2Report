@@ -7,7 +7,7 @@ from matplotlib import rcParams
 rcParams['font.family'] = 'sans-serif'
 rcParams['font.sans-serif'] = ['Linux Biolinum']
 rcParams['font.serif'] = ['Linux Biolinum']
-rcParams["font.size"] = "10"
+rcParams["font.size"] = "8"
 rcParams['text.usetex'] ='false'
 
 
@@ -112,6 +112,48 @@ def youtube_hours(user_data_list):
 	bar_active = plt.bar(range(len(ids)), active_hours, 0.5, color="#ffbb4e")
 	ax.legend((bar_hours[0], bar_foregound[0], bar_active[0]), ('Total', 'Foreground', 'Active'))
 	fig.savefig(dfn.output_dir + 'youtube_hours' + dfn.plot_format, bbox_inches='tight')
+	
+# Bar chart showing youtube foreground hours. But only of interesting users
+def best_youtube_hours(user_data_list):
+	
+	# Collect data
+	ids = []
+	active_hours = []
+	foreground_hours = []
+	hours = []
+	for user_data in user_data_list:
+		if user_data.mid in ['SHEBA 2', 'SHEBA 6', 'MDA 1', 'MDA 2', 'MDA 5', 'AUTH 10']:
+			ids.append(user_data.mid)
+			active_hours.append(user_data.youtube_active_hours)
+			foreground_hours.append(user_data.youtube_foreground_hours)
+			hours.append(user_data.youtube_hours)
+	
+	# Plot data
+	fig = plt.figure(figsize=(2.1, 2))
+	ax = plt.gca()
+	ax.set_axisbelow(True)
+	plt.gca().set_ylim([0,15])
+	plt.grid(True, axis='y')
+	plt.tick_params(
+		axis='both',
+		which='both',
+		bottom='on',
+		top='off',
+		left='off',
+		right='off',
+		labelbottom='on',
+		labelleft='on')
+	ax.spines['right'].set_visible(False)
+	ax.spines['top'].set_visible(False)
+	ax.spines['left'].set_visible(False)
+	plt.xticks(range(len(ids)), ids)
+	bar_hours = plt.bar(range(len(ids)), hours, 0.4, color="#0B3875", edgecolor='none')
+	bar_foregound = plt.bar(range(len(ids)), foreground_hours, 0.4, color="#d44131")
+	bar_active = plt.bar(range(len(ids)), active_hours, 0.4, color="#ffbb4e")
+	ax.legend((bar_hours[0], bar_foregound[0], bar_active[0]), ('Background', 'Foreground', 'Watching'), loc='upper left')
+	plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='center')
+	fig.tight_layout()
+	fig.savefig(dfn.output_dir + 'best_youtube_hours' + dfn.plot_format, bbox_inches='tight')
 	
 # Bar chart showing day time of starts
 def start_day_times(user_data_list):
