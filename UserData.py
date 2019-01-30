@@ -40,6 +40,7 @@ class UserData():
 		# Do written report
 		rp.print_line("MAMEM id: ", self.mid)
 		rp.print_line("Nickname: ", self.nickname)
+		rp.print_line("Google Maps Active Hours: ", self.google_maps_hours)
 		'''
 		rp.print_line("Setup Date: ", self._setup_date)
 		rp.print_line("Start Count: ", self.start_count)
@@ -311,6 +312,7 @@ class UserData():
 		self.youtube_active_hours = 0.0
 		self.youtube_foreground_hours = 0.0
 		self.youtube_hours = 0.0
+		self.google_maps_hours = 0.0
 		self.domain_activity_non_social_task = OrderedDict()
 		#########################################################################
 		
@@ -489,6 +491,10 @@ class UserData():
 								self.youtube_active_hours += page['durationUserActive'] / (60.0 * 60.0)
 								self.youtube_foreground_hours += page['durationInForeground'] / (60.0 * 60.0)
 								self.youtube_hours += page['duration'] / (60.0 * 60.0)
+								
+							# Update Google Maps
+							if 'google.com/maps' in page['url']:
+								self.google_maps_hours += page['durationUserActive'] / (60.0 * 60.0)
 		
 		# Filter social tasks from domain activity
 		for domain, activity in self.domain_activity.items():
