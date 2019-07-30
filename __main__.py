@@ -117,6 +117,14 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	print('.', end='')
 	# plt.accumulated_normalized_daily_use(user_data_list)
 	# print('.', end='')
+	plt.active_hours_over_time(user_data_list, "MDA 1")
+	print('.', end='')
+	plt.active_hours_over_time(user_data_list, "MDA 5")
+	print('.', end='')
+	plt.active_hours_over_time(user_data_list, "MDA 2")
+	print('.', end='')
+	plt.active_hours_over_time(user_data_list, "AUTH 10")
+	print('.', end='')
 	print('finished.')
 	
 	# Export

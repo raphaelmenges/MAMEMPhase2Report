@@ -350,7 +350,44 @@ def normalized_daily_use(user_data_list):
 	# Save figure
 	fig.tight_layout()
 	fig.savefig(dfn.output_dir + 'normalized_daily_use' + dfn.plot_format)
-	
+
+# Active hours over time of one user
+def active_hours_over_time(user_data_list, mid):
+
+	# Go over days of active hours for the chosen user
+	plot_data_x = []
+	plot_data_y = []
+	for idx, user in enumerate(user_data_list): # go over users
+		if user.mid == mid:
+			for day_string, use in user.daily_use.items(): # go over daily use of user
+
+				# Check whether there was actual use
+				start_count = use['start_count']
+				active_hours = use['general']['active_hours']
+
+				# Gather coordinate
+				x = (hlp.from_day_string_to_date(day_string) - hlp.from_day_string_to_date(hlp.from_date_to_day_string(user._setup_date))).days # days since start of experiment used as index in x-axis
+				y = active_hours
+
+				# Render bar of activity for each day
+				plot_data_x.append(x)
+				plot_data_y.append(y)
+
+	fig = plt.figure(figsize=(7, 3))
+	ax = plt.gca()
+
+	# x-axis, displaying the date range
+	plt.xticks(range(max(plot_data_x)+1), [x + 1 for x in range(max(plot_data_x)+1)]) # ticks and their labels
+	ax.set_xlim(-1, max(plot_data_x)+1)
+
+	# Plot it
+	plt.title('Active Hours of ' + mid)
+	plt.bar(plot_data_x, plot_data_y, color='#d7301f', edgecolor='black')
+
+	# Save figure
+	fig.tight_layout()
+	fig.savefig(dfn.output_dir + 'active_hours_' + mid.lower().replace(" ", "_") + dfn.plot_format)
+
 # Daily usage plot, starting for each user at the setup date, accumulated per cohort
 def accumulated_normalized_daily_use(user_data_list):
     
