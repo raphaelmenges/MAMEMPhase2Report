@@ -5,8 +5,8 @@ import numpy as np
 
 from matplotlib import rcParams
 rcParams['font.family'] = 'sans-serif'
-rcParams['font.sans-serif'] = ['Linux Biolinum']
-rcParams['font.serif'] = ['Linux Biolinum']
+rcParams['font.sans-serif'] = ['Times New Roman']
+rcParams['font.serif'] = ['Times New Roman']
 rcParams["font.size"] = "8"
 rcParams['text.usetex'] ='false'
 
@@ -316,11 +316,11 @@ def normalized_daily_use(user_data_list):
 				# Decide on color
 				color = '#000000'
 				if 'SHEBA' in user.mid:
-					color = '#ffbb4e'
+					color = '#fdcc8a'
 				elif 'MDA' in user.mid:
-					color = '#0B3875'
+					color = '#fc8d59'
 				else:
-					color = '#d44131'
+					color = '#d7301f'
 				
 				# Render big dot
 				plot_data_x.append(x)
@@ -340,7 +340,7 @@ def normalized_daily_use(user_data_list):
 	
 	# Plot it
 	# plt.title('Daily Use')
-	plt.scatter(plot_data_x, plot_data_y, s=100, color=plot_data_color)
+	plt.scatter(plot_data_x, plot_data_y, s=100, color=plot_data_color, edgecolors='black')
 	
 	# Grid
 	plt.rc('grid', linestyle="-", color='lightgrey')
