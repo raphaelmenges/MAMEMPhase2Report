@@ -365,13 +365,15 @@ def active_hours_over_time(user_data_list, mid):
 				start_count = use['start_count']
 				active_hours = use['general']['active_hours']
 
-				# Gather coordinate
-				x = (hlp.from_day_string_to_date(day_string) - hlp.from_day_string_to_date(hlp.from_date_to_day_string(user._setup_date))).days # days since start of experiment used as index in x-axis
-				y = active_hours
+				if start_count > 0 or active_hours > 0:
 
-				# Render bar of activity for each day
-				plot_data_x.append(x)
-				plot_data_y.append(y)
+					# Gather coordinate
+					x = (hlp.from_day_string_to_date(day_string) - hlp.from_day_string_to_date(hlp.from_date_to_day_string(user._setup_date))).days # days since start of experiment used as index in x-axis
+					y = active_hours
+
+					# Render bar of activity for each day
+					plot_data_x.append(x)
+					plot_data_y.append(y)
 
 	fig = plt.figure(figsize=(7, 3))
 	ax = plt.gca()
