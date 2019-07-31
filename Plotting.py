@@ -390,6 +390,58 @@ def active_hours_over_time(user_data_list, mid):
 	fig.tight_layout()
 	fig.savefig(dfn.output_dir + 'active_hours_' + mid.lower().replace(" ", "_") + dfn.plot_format)
 
+# Average click tries over time of one user
+def avg_click_tries_over_time(user_data_list, mid):
+
+	# Go over days for the chosen user
+	plot_data_x = []
+	plot_data_y = []
+	for idx, user in enumerate(user_data_list): # go over users
+		if user.mid == mid:
+			for day_string, use in user.daily_use.items(): # go over daily use of user
+
+				# Check for click tries
+				start_count = use['start_count']
+				attempts_a = use['general']['clicks_per_attempt'] # click tries per page
+				tries_a = [item for sublist in attempts_a for item in sublist] # flatten array so it is one array per day across all visited pages
+				attempts_b = use['general']['clicks_per_attempt_drift_map']
+				tries_b = [item for sublist in attempts_b for item in sublist]
+				tries = tries_a + tries_b
+
+				# Mean tries for the day
+				if tries:
+					tries_mean = np.mean(tries)
+				else:
+					tries_mean = 0
+
+				if start_count > 0:
+
+					# Gather coordinate
+					x = (hlp.from_day_string_to_date(day_string) - hlp.from_day_string_to_date(hlp.from_date_to_day_string(user._setup_date))).days # days since start of experiment used as index in x-axis
+					y = tries_mean
+
+					# Render bar of activity for each day
+					plot_data_x.append(x)
+					plot_data_y.append(y)
+
+	fig = plt.figure(figsize=(7, 3))
+	ax = plt.gca()
+
+	# x-axis, displaying the date range
+	plt.xticks(range(max(plot_data_x)+1), [x + 1 for x in range(max(plot_data_x)+1)]) # ticks and their labels
+	ax.set_xlim(-1, max(plot_data_x)+1)
+
+	# y-axis
+	ax.set_ylim(0.9, 2)
+
+	# Plot it
+	plt.title('Average click tries of ' + mid)
+	plt.bar(plot_data_x, plot_data_y, color='#d7301f', edgecolor='black')
+
+	# Save figure
+	fig.tight_layout()
+	fig.savefig(dfn.output_dir + 'avg_click_tries_' + mid.lower().replace(" ", "_") + dfn.plot_format)
+
 # Daily usage plot, starting for each user at the setup date, accumulated per cohort
 def accumulated_normalized_daily_use(user_data_list):
     
