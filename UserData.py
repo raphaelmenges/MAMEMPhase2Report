@@ -94,7 +94,7 @@ class UserData():
 		self.domain_activity = OrderedDict() # ordered dict of domain and dict about frequency, page_count,
 		# active_hours, char_input_count, click_count, stay_count, further filled in _calc_page_acitivity_metrics
 		self.daily_use = {} # day: {start_count,
-		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count, domains} };
+		# task: {active_hours, session_count, page_count, char_input_count, char_input_seconds, click_count, clicks_per_attempt, clicks_per_attempt_drift_map, domains} };
 		# day encoded as d-m-Y string; further filled in _calc_start_metrics and _calc_page_acitivity_metrics
 		#########################################################################
 		
