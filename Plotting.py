@@ -4,10 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from matplotlib import rcParams
-rcParams['font.family'] = 'sans-serif'
-rcParams['font.sans-serif'] = ['Linux Biolinum']
-rcParams['font.serif'] = ['Linux Biolinum']
-rcParams["font.size"] = "8"
+rcParams['font.family'] = ['Liberation Serif']
+rcParams["font.size"] = 8
 rcParams['text.usetex'] ='false'
 
 
