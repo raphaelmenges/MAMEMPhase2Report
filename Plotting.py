@@ -5,7 +5,7 @@ import numpy as np
 
 from matplotlib import rcParams
 rcParams['font.family'] = ['Liberation Serif']
-rcParams["font.size"] = 8
+rcParams["font.size"] = 10
 rcParams['text.usetex'] ='false'
 
 
@@ -161,14 +161,26 @@ def start_day_times(user_data_list):
 	for user in user_data_list:
 		for (hour, minute, second) in user.start_day_times:
 			bins[hour] += 1
-	
+
 	# Plot it
-	fig = plt.figure()
+	fig = plt.figure(figsize=(7, 3))
 	ax = plt.gca()
 	ax.set_axisbelow(True)
-	plt.grid(True)
-	plt.title('Day Times of Starts')
-	plt.bar(range(24), bins, 0.5, color="#d44131")
+	ax.spines['right'].set_visible(False)
+	ax.spines['top'].set_visible(False)
+	ax.spines['left'].set_visible(False)
+	plt.grid(True, axis='y')
+	plt.tick_params(
+		axis='both',
+		which='both',
+		bottom=True,
+		top=False,
+		left=False,
+		right=False,
+		labelbottom=True,
+		labelleft=True)
+	plt.xticks([0,6,9,12,15,18,21], ['0 a.m.','6 a.m.','9 a.m.','12 p.m.','3 p.m.','6 p.m.','9 p.m.'])
+	plt.bar(range(24), bins, 0.75, color="#d44131")
 	fig.savefig(dfn.output_dir + 'start_day_times' + dfn.plot_format, bbox_inches='tight')
 
 # Scatter plot about run times after each start
