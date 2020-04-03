@@ -120,6 +120,7 @@ with open('mamem-phase2-fall17-export.json', encoding='utf-8') as data_file:
 	print('.', end='')
 	'''
 
+	plt.general_metrics_counts(user_data_list)
 	plt.start_day_times(user_data_list)
 
 	print('finished.')

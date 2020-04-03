@@ -264,10 +264,10 @@ def general_metrics_counts(user_data_list):
 	counts = {
 			'bookmarkAdding': ['bookmark_adding_count', 'Bookmark Add Count', []],
 			'bookmarkUsage': ['bookmark_usage_count', 'Bookmark Use Count', []],
-			'goBackUsage': ['go_back_usage_count', 'Back Navigation Count', []],
+			# 'goBackUsage': ['go_back_usage_count', 'Back Navigation Count', []],
 			# 'goForwardUsage': ['go_forward_usage_count', 'Go Forward Usage Count', []],
-			'historyUsage': ['history_usage_count', 'Histroy Use Count', []],
-			'pause': ['pause_count', 'Pause Count', []],
+			'historyUsage': ['history_usage_count', 'History Use Count', []],
+			# 'pause': ['pause_count', 'Pause Count', []],
 			# 'tabClosing': ['tab_closing_count', 'Tab Closing Count', []],
 			# 'tabCreation': ['tab_creation_count', 'Tab Creation Count', []],
 			# 'tabReloading': ['tab_reloading_count', 'Tab Reloading Count', []],
@@ -276,36 +276,65 @@ def general_metrics_counts(user_data_list):
 			# 'urlInput': ['url_input_count', 'URL Input Count', []]
 			}
 	for user_data in user_data_list:
-		ids.append(user_data.mid)
-		counts['bookmarkAdding'][2].append(user_data.bookmark_adding_count)
-		counts['bookmarkUsage'][2].append(user_data.bookmark_usage_count)
-		counts['goBackUsage'][2].append(user_data.go_back_usage_count)
-		# counts['goForwardUsage'][2].append(user_data.go_forward_usage_count)
-		counts['historyUsage'][2].append(user_data.history_usage_count)
-		counts['pause'][2].append(user_data.pause_count)
-		# counts['tabClosing'][2].append(user_data.tab_closing_count)
-		# counts['tabCreation'][2].append(user_data.tab_creation_count)
-		# counts['tabReloading'][2].append(user_data.tab_reloading_count)
-		counts['tabSwitching'][2].append(user_data.tab_switching_count)
-		# counts['unpause'][2].append(user_data.unpause_count)
-		# counts['urlInput'][2].append(user_data.url_input_count)
+		if user_data.mid in ['MDA 1', 'MDA 5', 'AUTH 10']:
+			ids.append(user_data.mid)
+			counts['bookmarkAdding'][2].append(user_data.bookmark_adding_count)
+			counts['bookmarkUsage'][2].append(user_data.bookmark_usage_count)
+			# counts['goBackUsage'][2].append(user_data.go_back_usage_count)
+			# counts['goForwardUsage'][2].append(user_data.go_forward_usage_count)
+			counts['historyUsage'][2].append(user_data.history_usage_count)
+			# counts['pause'][2].append(user_data.pause_count)
+			# counts['tabClosing'][2].append(user_data.tab_closing_count)
+			# counts['tabCreation'][2].append(user_data.tab_creation_count)
+			# counts['tabReloading'][2].append(user_data.tab_reloading_count)
+			counts['tabSwitching'][2].append(user_data.tab_switching_count)
+			# counts['unpause'][2].append(user_data.unpause_count)
+			# counts['urlInput'][2].append(user_data.url_input_count)
 	
 	# Plot all global metrics
 	for key, item in counts.items():
-		fig = plt.figure()
+		fig = plt.figure(figsize=(2.5, 1.75))
 		ax = plt.gca()
+
+		
+
 		ax.set_axisbelow(True)
-		plt.grid(True)
-		plt.xticks(range(len(ids)), ids, rotation=45)
-		plt.title(item[1])
-		plt.bar(range(len(ids)), item[2], 0.5, color="#d44131")
+		ax.spines['right'].set_visible(False)
+		ax.spines['top'].set_visible(False)
+		ax.spines['left'].set_visible(False)
+		plt.grid(True, axis='y')
+		plt.tick_params(
+		axis='both',
+		which='both',
+		bottom=True,
+		top=False,
+		left=False,
+		right=False,
+		labelbottom=True,
+		labelleft=True)
+		plt.xticks(range(len(ids)), ids)
+		# plt.title(item[1])
+		rects = plt.bar(range(len(ids)), item[2], 0.5, color=['#FFAD00', '#0B3875', '#d44131'], edgecolor=['#FFAD00', '#0B3875', '#d44131'], linewidth=0.1)
+		
+		# Put labels above bars
+		def autolabel(rects):
+			"""
+			Attach a text label above each bar displaying its height
+			"""
+			for rect in rects:
+				height = rect.get_height()
+				content = '%.0f' % (round(10.0*height)/10.0)
+				ax.text(rect.get_x() + rect.get_width()/2., 1.0*height,
+						content, ha='center', va='bottom', size='smaller')
+		autolabel(rects)
+
 		fig.savefig(dfn.output_dir + item[0] + dfn.plot_format, bbox_inches='tight')
 		print('.', end='')
-        
-        
+		
+		
 # Daily usage plot, starting for each user at the setup date
 def normalized_daily_use(user_data_list):
-    
+	
 	# Go over days of active hours for each user
 	plot_data_x = []
 	plot_data_y = []
@@ -363,7 +392,7 @@ def normalized_daily_use(user_data_list):
 	
 # Daily usage plot, starting for each user at the setup date, accumulated per cohort
 def accumulated_normalized_daily_use(user_data_list):
-    
+	
 	# Go over days of active hours for each user
 	plot_data_x = []
 	plot_data_y = []
